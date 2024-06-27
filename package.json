@@ -10,10 +10,14 @@
   },
   "dependencies": {
     "@remotion/cli": "^4.0.177",
+    "@remotion/player": "4.0.177",
+    "ai": "^3.2.11",
     "next": "14.2.4",
+    "openai": "^4.52.1",
     "react": "^18",
     "react-dom": "^18",
-    "remotion": "^4.0.177"
+    "remotion": "^4.0.177",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",
