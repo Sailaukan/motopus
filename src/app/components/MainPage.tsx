@@ -1,13 +1,11 @@
 'use client'
 
-import { useState } from "react";
 import { Player } from "@remotion/player";
 import { Main } from "../remotion/Root";
 import { useMyContext } from '../MyContext';
 
 const MainPage: React.FC = () => {
     const { text, setText } = useMyContext();
-
 
 
     const handleInput = (event: any) => {
@@ -63,7 +61,7 @@ const MainPage: React.FC = () => {
 
                 <div className="flex  justify-center">
                     <Player
-                        className="border border-gray-200 rounded-lg dark:border-gray-700"
+                        className="border rounded-lg"
                         component={Main}
                         durationInFrames={20 * 30}
                         compositionWidth={1280}

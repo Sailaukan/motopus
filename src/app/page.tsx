@@ -10,6 +10,7 @@ export default function Home() {
   return (
     <MyContext.Provider value={{ text, setText }}>
       <MainPage />
+      
     </MyContext.Provider>
   );
 }
