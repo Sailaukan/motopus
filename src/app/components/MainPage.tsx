@@ -3,9 +3,34 @@
 import { Player } from "@remotion/player";
 import { Main } from "../remotion/Root";
 import { useMyContext } from '../MyContext';
+import React, { useState, FormEvent } from 'react';
+import axios from 'axios';
+
+interface ClaudeResponse {
+    content: Array<{ text: string }>;
+}
 
 const MainPage: React.FC = () => {
     const { text, setText } = useMyContext();
+    const [response, setResponse] = useState<string>('');
+
+    const handleSubmit = async (e: FormEvent<HTMLElement>) => {
+        e.preventDefault();
+        console.log('submitted');
+
+        try {
+            const res = await axios.post<ClaudeResponse>('/api/claude', {
+                messages: [{ role: 'user', content: text }],
+                model: 'claude-3-opus-20240229',
+                max_tokens: 1000,
+            });
+            setResponse(res.data.content[0].text);
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    };
 
 
     const handleInput = (event: any) => {
@@ -50,6 +75,7 @@ const MainPage: React.FC = () => {
                                     <button
                                         className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 py-2 absolute right-1 top-1/2 -translate-y-1/2 h-10 md:h-12 lg:h-14 px-6 rounded-full"
                                         type="submit"
+                                        onClick={handleSubmit}
                                     >
                                         Generate
                                     </button>
@@ -58,12 +84,12 @@ const MainPage: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
+                {/* {response} */}
                 <div className="flex  justify-center">
                     <Player
                         className="border rounded-lg"
                         component={Main}
-                        durationInFrames={20 * 30}
+                        durationInFrames={10 * 30}
                         compositionWidth={1280}
                         compositionHeight={500}
                         fps={30}
@@ -102,9 +128,9 @@ const MainPage: React.FC = () => {
                                             viewBox="0 0 24 24"
                                             fill="none"
                                             stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                             className="w-8 h-8 text-primary"
                                         >
                                             <path d="M15 4V2"></path>
@@ -130,9 +156,9 @@ const MainPage: React.FC = () => {
                                             viewBox="0 0 24 24"
                                             fill="none"
                                             stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                             className="w-8 h-8 text-primary"
                                         >
                                             <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"></path>
@@ -151,9 +177,9 @@ const MainPage: React.FC = () => {
                                             viewBox="0 0 24 24"
                                             fill="none"
                                             stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                             className="w-8 h-8 text-primary"
                                         >
                                             <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>

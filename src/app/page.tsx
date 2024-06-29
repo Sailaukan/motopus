@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { MyContext } from './MyContext';
 import MainPage from './components/MainPage';
+import BetaPreview from './BetaPreview/page';
 
 export default function Home() {
   const [text, setText] = useState('');
@@ -10,7 +11,7 @@ export default function Home() {
   return (
     <MyContext.Provider value={{ text, setText }}>
       <MainPage />
-      
+      {/* <BetaPreview/> */}
     </MyContext.Provider>
   );
 }

@@ -15,7 +15,7 @@ export const RemotionRoot: React.FC = () => {
     <Composition
       id="Main"
       component={Main}
-      durationInFrames={20 * 30}
+      durationInFrames={10 * 30}
       fps={30}
       width={1280}
       height={500}
@@ -195,9 +195,7 @@ const UserPrompt = ({ text }: { text: string }) => {
   );
 };
 
-
 const MemoizedDynamicBackground = React.memo(DynamicBackground);
-
 
 export const Main = React.memo(() => {
   const { text, setText } = useMyContext();
