@@ -5,6 +5,7 @@ import { Main } from "../remotion/Root";
 import { useMyContext } from '../MyContext';
 import React, { useState, FormEvent } from 'react';
 import axios from 'axios';
+import additionalPrompt from "../api/claude/additionalPrompt";
 
 interface ClaudeResponse {
     content: Array<{ text: string }>;
@@ -14,24 +15,24 @@ const MainPage: React.FC = () => {
     const { text, setText } = useMyContext();
     const [response, setResponse] = useState<string>('');
 
+    const combinedPrompt = `${additionalPrompt}${text}`;
+
     const handleSubmit = async (e: FormEvent<HTMLElement>) => {
         e.preventDefault();
         console.log('submitted');
+        console.log(combinedPrompt);
 
         try {
             const res = await axios.post<ClaudeResponse>('/api/claude', {
-                messages: [{ role: 'user', content: text }],
-                model: 'claude-3-opus-20240229',
+                messages: [{ role: 'user', content: combinedPrompt }],
+                model: 'claude-3-5-sonnet-20240620',
                 max_tokens: 1000,
             });
             setResponse(res.data.content[0].text);
-
         } catch (error) {
             console.error('Error:', error);
         }
-
     };
-
 
     const handleInput = (event: any) => {
         setText(event.target.value)
@@ -58,7 +59,6 @@ const MainPage: React.FC = () => {
                         </div>
                     </div>
                 </nav>
-
                 <div className="bg-primary text-primary-foreground py-20 md:py-20 lg:py-24">
                     <div className="container px-4 md:px-6">
                         <div className="max-w-3xl mx-auto text-center space-y-4">
@@ -84,7 +84,6 @@ const MainPage: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                {/* {response} */}
                 <div className="flex  justify-center">
                     <Player
                         className="border rounded-lg"

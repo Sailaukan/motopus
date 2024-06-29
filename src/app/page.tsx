@@ -7,9 +7,10 @@ import BetaPreview from './BetaPreview/page';
 
 export default function Home() {
   const [text, setText] = useState('');
+  const [code, setCode] = useState('');
 
   return (
-    <MyContext.Provider value={{ text, setText }}>
+    <MyContext.Provider value={{ text, setText, code, setCode }}>
       <MainPage />
       {/* <BetaPreview/> */}
     </MyContext.Provider>
