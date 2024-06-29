@@ -13,6 +13,7 @@ interface ClaudeResponse {
 
 const MainPage: React.FC = () => {
     const { text, setText } = useMyContext();
+    const { code, setCode } = useMyContext();
     const [response, setResponse] = useState<string>('');
 
     const combinedPrompt = `${additionalPrompt}${text}`;
@@ -22,13 +23,18 @@ const MainPage: React.FC = () => {
         console.log('submitted');
         console.log(combinedPrompt);
 
+        var x = "console.log('I am'); console.log('Alive!')";
+        new Function(x)();
+
         try {
             const res = await axios.post<ClaudeResponse>('/api/claude', {
                 messages: [{ role: 'user', content: combinedPrompt }],
                 model: 'claude-3-5-sonnet-20240620',
-                max_tokens: 1000,
+                max_tokens: 4000,
             });
             setResponse(res.data.content[0].text);
+            setCode(res.data.content[0].text)
+            console.log(res.data.content[0].text)
         } catch (error) {
             console.error('Error:', error);
         }
@@ -100,7 +106,7 @@ const MainPage: React.FC = () => {
                         }}
                     />
                 </div>
-
+                {code}
                 <main className="flex-1">
                     <section className="py-12 md:py-20 lg:py-24">
                         <div className="container px-4 md:px-6">
@@ -198,7 +204,7 @@ const MainPage: React.FC = () => {
                 </main>
                 <footer className="bg-muted text-muted-foreground py-6 md:py-8 lg:py-10">
                     <div className="container px-4 md:px-6 flex items-center justify-between">
-                        <p className="text-sm md:text-base lg:text-lg">© 2024 Motopus. All rights reserv</p>
+                        <p className="text-sm md:text-base lg:text-lg">© 2024 Motopus. All rights reserved</p>
                         <div className="flex items-center gap-4 md:gap-6 lg:gap-8">
                             <a className="text-sm md:text-base lg:text-lg hover:underline" href="#">
                                 Privacy

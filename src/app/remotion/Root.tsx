@@ -10,6 +10,7 @@ import {
   random,
 } from "remotion";
 
+
 export const RemotionRoot: React.FC = () => {
   return (
     <Composition
@@ -199,6 +200,9 @@ const MemoizedDynamicBackground = React.memo(DynamicBackground);
 
 export const Main = React.memo(() => {
   const { text, setText } = useMyContext();
+  
+  // const { code, setCode } = useMyContext();
+
   const { durationInFrames } = useVideoConfig();
 
   return (
@@ -220,3 +224,6 @@ export const Main = React.memo(() => {
     </div>
   );
 });
+
+
+
