@@ -224,6 +224,3 @@ export const Main = React.memo(() => {
     </div>
   );
 });
-
-
-
