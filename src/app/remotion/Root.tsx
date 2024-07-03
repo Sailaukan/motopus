@@ -1,22 +1,38 @@
-import React from "react";
-import { Composition, Sequence, useCurrentFrame, useVideoConfig, interpolate } from "remotion";
-import { useMyContext } from '../MyContext';
+'use client';
 
-type CommandProps = {
-  [key: string]: any;
+import React, { useState, useEffect } from 'react';
+import { Sequence, useCurrentFrame, interpolate } from 'remotion';
+
+interface CommandProps {
+  type: string;
+  props: {
+    [key: string]: any;
+  };
+}
+
+interface MainProps {
+  code: string;
+}
+
+const interpolateColor = (frame: number, startFrame: number, endFrame: number, startColor: string, endColor: string) => {
+  const start = parseInt(startColor.slice(1), 16);
+  const end = parseInt(endColor.slice(1), 16);
+
+  const r = Math.round(interpolate(frame, [startFrame, endFrame], [(start >> 16) & 255, (end >> 16) & 255]));
+  const g = Math.round(interpolate(frame, [startFrame, endFrame], [(start >> 8) & 255, (end >> 8) & 255]));
+  const b = Math.round(interpolate(frame, [startFrame, endFrame], [start & 255, end & 255]));
+
+  return `rgb(${r},${g},${b})`;
 };
 
-const renderComponent = (type: string, props: CommandProps) => {
-  const frame = useCurrentFrame();
+const renderComponent = (frame: number, type: string, props: { [key: string]: any }) => {
 
   const commonStyles: React.CSSProperties = {
     position: 'absolute',
-    color: props.color,
-    fontSize: props.size,
-    top: props.top,
-    left: props.left,
-    right: props.right,
-    bottom: props.bottom,
+    color: interpolateColor(frame, props.start, props.start + props.duration, props.startColor, props.finishColor),
+    fontSize: `${interpolate(frame, [props.start, props.start + props.duration], [props.startSize, props.finishSize])}rem`,
+    top: `${interpolate(frame, [props.start, props.start + props.duration], [props.startTop, props.finishTop])}%`,
+    left: `${interpolate(frame, [props.start, props.start + props.duration], [props.startLeft, props.finishLeft])}%`,
     opacity: interpolate(
       frame,
       [props.start, props.start + 15, props.start + props.duration - 15, props.start + props.duration],
@@ -37,75 +53,44 @@ const renderComponent = (type: string, props: CommandProps) => {
         <div
           style={{
             ...commonStyles,
-            width: props.size,
-            height: props.size,
-            backgroundColor: props.color,
+            width: `${interpolate(frame, [props.start, props.start + props.duration], [props.startSize, props.finishSize])}rem`,
+            height: `${interpolate(frame, [props.start, props.start + props.duration], [props.startSize, props.finishSize])}rem`,
+            backgroundColor: interpolateColor(frame, props.start, props.start + props.duration, props.startColor, props.finishColor),
             borderRadius: props.shape === 'circle' ? '50%' : '0%'
           }}
         />
       );
-    // Add more cases for other component types
     default:
       console.warn(`Unknown component type: ${type}`);
       return null;
   }
 };
 
-// JSON data (replace this with actual data from API)
-const videoJSON = {
-  "commands": [
-    {
-      "type": "text",
-      "props": {
-        "text": "AI Animation Generator",
-        "color": "#FFF",
-        "size": "5rem",
-        "top": "20%",
-        "start": 30,
-        "duration": 90
-      }
-    },
-    {
-      "type": "text",
-      "props": {
-        "text": "Transform Your Ideas",
-        "color": "#FFF",
-        "size": "4.5rem",
-        "top": "30%",
-        "start": 120,
-        "duration": 90
-      }
+export const Main: React.FC<MainProps> = ({ code }) => {
+  const [videoJSON, setVideoJSON] = useState<{
+    commands: CommandProps[];
+  }>(JSON.parse(code));
+  const [isError, setIsError] = useState(false);
+
+  const frame = useCurrentFrame();
+
+  useEffect(() => {
+    try {
+      setVideoJSON(JSON.parse(code));
+      setIsError(false);
+    } catch (error) {
+      console.error("Invalid JSON in code context:", error);
+      setIsError(true);
     }
-    // Add more commands as needed
-  ]
-};
+  }, [code]);
 
-const RemotionRoot: React.FC = () => {
-  return (
-    <Composition
-      id="Main"
-      component={Main}
-      durationInFrames={10 * 30}
-      fps={30}
-      width={1280}
-      height={500}
-    />
-  );
-};
-
-export const Main: React.FC = () => {
-  const { durationInFrames } = useVideoConfig();
-  const { text } = useMyContext();
-
-  return (
+  return isError ? <div>Invalid JSON in code context</div> : (
     <div style={{ flexGrow: 1, background: '#000' }}>
       {videoJSON.commands.map((command, index) => (
         <Sequence key={index} from={command.props.start} durationInFrames={command.props.duration}>
-          {renderComponent(command.type, command.props)}
+          {renderComponent(frame, command.type, command.props)}
         </Sequence>
       ))}
     </div>
   );
 };
-
-export default RemotionRoot;

@@ -1,43 +1,65 @@
-'use client'
+'use client';
 
 import React, { useState, FormEvent } from 'react';
 import { Player } from "@remotion/player";
-import { useMyContext } from '../MyContext';
 import { Main } from '../remotion/Root';
 import axios from 'axios';
 import additionalPrompt from "../api/claude/additionalPrompt";
-import {
-    Composition,
-    Sequence,
-    useCurrentFrame,
-    useVideoConfig,
-    interpolate,
-    spring,
-    random,
-} from "remotion";
 import Footer from './Footer';
 import MainContent from './MainContent';
 import NavBar from './NavBar';
+
+const initialCode = JSON.stringify({
+    commands: [
+        {
+            type: "text",
+            props: {
+                text: "AI Animation Generator",
+                startColor: "#FFFFFF",
+                finishColor: "#FFA500",
+                startSize: 5,
+                finishSize: 6,
+                startTop: 20,
+                finishTop: 25,
+                startLeft: 10,
+                finishLeft: 15,
+                start: 30,
+                duration: 90
+            }
+        },
+        {
+            type: "text",
+            props: {
+                text: "Transform Your Ideas",
+                startColor: "#FFFFFF",
+                finishColor: "#00FF00",
+                startSize: 4.5,
+                finishSize: 5,
+                startTop: 30,
+                finishTop: 35,
+                startLeft: 20,
+                finishLeft: 25,
+                start: 120,
+                duration: 90
+            }
+        }
+    ]
+});
 
 interface ClaudeResponse {
     content: Array<{ text: string }>;
 }
 
-
 const MainPage: React.FC = () => {
-    const { text, setText } = useMyContext();
-    const { code, setCode } = useMyContext();
+    const [text, setText] = useState<string>('');
+    const [code, setCode] = useState<string>(initialCode);
     const [response, setResponse] = useState<string>('');
 
     const combinedPrompt = `${additionalPrompt}${text}`;
 
     const handleSubmit = async (e: FormEvent<HTMLElement>) => {
         e.preventDefault();
-        console.log('submitted');
         console.log(combinedPrompt);
-
-        var x = "console.log('I am'); console.log('Alive!')";
-        new Function(x)();
 
         try {
             const res = await axios.post<ClaudeResponse>('/api/claude', {
@@ -46,15 +68,16 @@ const MainPage: React.FC = () => {
                 max_tokens: 4000,
             });
             setResponse(res.data.content[0].text);
-            setCode(res.data.content[0].text)
-            console.log(res.data.content[0].text)
+            setCode(res.data.content[0].text);
+            console.log(res.data.content[0].text);
+            console.log(code);
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setText(event.target.value)
+        setText(event.target.value);
     }
 
     return (
@@ -86,7 +109,7 @@ const MainPage: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex  justify-center">
+                <div className="flex justify-center">
                     <Player
                         className="border rounded-lg"
                         component={Main}
@@ -100,13 +123,14 @@ const MainPage: React.FC = () => {
                         style={{
                             height: 400,
                         }}
+                        inputProps={{ code }}
                     />
                 </div>
                 <MainContent />
                 <Footer />
             </div>
         </div>
-    )
+    );
 }
 
 export default MainPage;
