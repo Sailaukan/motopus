@@ -106,12 +106,14 @@ const MainPage: React.FC = () => {
     const [text, setText] = useState<string>('');
     const [code, setCode] = useState<string>(initialCode);
     const [response, setResponse] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
     const combinedPrompt = `${additionalPrompt}${text}`;
 
     const handleSubmit = async (e: FormEvent<HTMLElement>) => {
         e.preventDefault();
         console.log(combinedPrompt);
+        setLoading(true);
 
         try {
             const res = await axios.post<ClaudeResponse>('/api/claude', {
@@ -125,6 +127,8 @@ const MainPage: React.FC = () => {
             console.log(code);
         } catch (error) {
             console.error('Error:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -161,29 +165,34 @@ const MainPage: React.FC = () => {
                                     >
                                         Generate
                                     </button>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="flex justify-center">
-                    <Player
-                        className="border rounded-lg"
-                        component={Main}
-                        durationInFrames={10 * 30}
-                        compositionWidth={1280}
-                        compositionHeight={500}
-                        fps={30}
-                        controls
-                        autoPlay
-                        loop
-                        style={{
-                            height: 400,
-                        }}
-                        inputProps={{ code }}
-                    />
+                    <div className="relative">
+                        {loading && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-opacity-50 bg-gray-700 z-10">
+                                <div className="w-16 h-16 border-4 border-t-4 border-t-transparent border-white rounded-full animate-spin"></div>
+                            </div>
+                        )}
+                        <Player
+                            className="border rounded-lg"
+                            component={Main}
+                            durationInFrames={10 * 30}
+                            compositionWidth={1280}
+                            compositionHeight={500}
+                            fps={30}
+                            controls
+                            autoPlay
+                            loop
+                            style={{
+                                height: 400,
+                            }}
+                            inputProps={{ code }}
+                        />
+                    </div>
                 </div>
                 <MainContent />
                 <Footer />
