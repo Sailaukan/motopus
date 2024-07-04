@@ -95,6 +95,7 @@ const MainContent = () => {
                 </div>
             </section>
         </main>
+        
     )
 }
 
