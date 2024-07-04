@@ -26,3 +26,5 @@ Motopus is built using a robust and modern technology stack to ensure high perfo
 3. **Rendering**: The JSON commands are parsed and converted into TypeScript code using both existing Remotion library components and functions that I create myself.
 4. **Preview**: The animation is rendered and previewed in real-time within the web app.
 5. **Export**: Once satisfied with the preview, the animation can be rendered on AWS Lambda Functions in MP3 format and exported.
+
+*Works only on localhost. Have problems with deploy*
