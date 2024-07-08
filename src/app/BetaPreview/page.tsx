@@ -1,144 +1,154 @@
-const BetaPreview = () => {
+import React, { useState } from 'react';
+import supabase from '../supabase/supabaseClient';
+
+const BetaPreview: React.FC = () => {
+    const [formData, setFormData] = useState({
+        email: '',
+        city: '',
+        country: '',
+        age: '',
+        field: ''
+    });
+
+    const [message, setMessage] = useState('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const { data, error } = await supabase
+                .from('motopus_beta_users')
+                .insert([formData]);
+            if (error) {
+                throw error;
+            }
+            setMessage('Form submitted successfully!');
+            setIsSubmitted(true);
+        } catch (error) {
+            console.error('Error inserting data:', error);
+            setMessage('Error submitting form.');
+        }
+    };
+
     return (
-        <div className="flex flex-col min-h-[100dvh]">
-            <main className="flex-1">
-                <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-                    <div className="container px-4 md:px-6">
-                        <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-                            <div className="flex flex-col justify-center space-y-4">
-                                <div className="space-y-2">
-                                    <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                                        Animate your ideas in 40 seconds using Motopus
-                                    </h1>
-                                    <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                                        Our cutting-edge 2D animation tool harnesses the power of AI to revolutionize your motion design
-                                        workflow. Create stunning animations with ease, from concept to final product.
-                                    </p>
-                                </div>
-                                <div className="w-full max-w-sm space-y-2">
-                                    <form className="flex gap-2">
-                                        <input
-                                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-w-lg flex-1"
-                                            placeholder="Enter your email"
-                                            type="email"
-                                        />
-                                        <button
-                                            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                                            type="submit"
-                                        >
-                                            Join Beta
-                                        </button>
-                                    </form>
-                                    <p className="text-xs text-muted-foreground">
-                                        Be the first to experience our groundbreaking motion design tool. Sign up for the beta and get
-                                        notified when it's ready.
-                                    </p>
-                                </div>
-                            </div>
-                            <img
-                                src="/placeholder.svg"
-                                width="550"
-                                height="550"
-                                alt="Motion Design Tool"
-                                className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#9333ea] to-[#3b82f6] px-4 py-6 relative">
+            <div className={`max-w-md w-full bg-white rounded-lg shadow-lg p-10 ${isSubmitted ? 'blur-sm' : ''}`}>
+                <div className="text-center space-y-4">
+                    <div className="flex justify-center">
+                        <img src="logo.png" alt="Motopus Logo" className="h-24" />
+                    </div>
+                    <h2 className="text-4xl font-bold">Cтаньте первым пользователем Motopus</h2>
+                    <p className="text-muted-foreground">
+                        Заполните форму и войдите в список пользователей, которые получат доступ к бета-тестированию Motopus первыми
+                    </p>
+                </div>
+                <form className="space-y-4 mt-6" onSubmit={handleSubmit}>
+                    <div>
+                        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            Email
+                        </label>
+                        <input
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            id="email"
+                            name="email"
+                            placeholder="Введите ваш email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                Город
+                            </label>
+                            <input
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                id="city"
+                                name="city"
+                                placeholder="Введите ваш город"
+                                value={formData.city}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                Страна
+                            </label>
+                            <input
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                id="country"
+                                name="country"
+                                placeholder="Введите вашу страну"
+                                value={formData.country}
+                                onChange={handleChange}
                             />
                         </div>
                     </div>
-                </section>
-                <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-                    <div className="container px-4 md:px-6">
-                        <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                            <div className="space-y-2">
-                                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">AI-Powered Motion Design</div>
-                                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Elevate Your Animations with Ease</h2>
-                                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                                    Our AI-powered 2D animation tool takes the complexity out of motion design, allowing you to create
-                                    captivating animations with just a few clicks. Unleash your creativity and bring your ideas to life
-                                    like never before.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-                            <img
-                                src="/placeholder.svg"
-                                width="550"
-                                height="310"
-                                alt="AI-Powered Motion Design"
-                                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                Возраст
+                            </label>
+                            <input
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                id="age"
+                                name="age"
+                                placeholder="Введите ваш возраст"
+                                type="number"
+                                value={formData.age}
+                                onChange={handleChange}
                             />
-                            <div className="flex flex-col justify-center space-y-4">
-                                <ul className="grid gap-6">
-                                    <li>
-                                        <div className="grid gap-1">
-                                            <h3 className="text-xl font-bold">Intelligent Automation</h3>
-                                            <p className="text-muted-foreground">
-                                                Our AI-powered algorithms handle the technical complexities, allowing you to focus on your
-                                                creative vision.
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="grid gap-1">
-                                            <h3 className="text-xl font-bold">Seamless Workflow</h3>
-                                            <p className="text-muted-foreground">
-                                                Streamline your motion design process with intuitive tools and real-time collaboration features.
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="grid gap-1">
-                                            <h3 className="text-xl font-bold">Stunning Animations</h3>
-                                            <p className="text-muted-foreground">
-                                                Elevate your projects with visually stunning animations that captivate your audience.
-                                            </p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                Интерес
+                            </label>
+                            <select
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                id="field"
+                                name="field"
+                                value={formData.field}
+                                onChange={handleChange}
+                            >
+                                <option value="" disabled>Выберите ваш интерес</option>
+                                <option value="work">Для работы</option>
+                                <option value="fun">Для развлечения</option>
+                                <option value="study">Для учебы</option>
+                                <option value="other">Другое</option>
+                            </select>
                         </div>
                     </div>
-                </section>
-                <section className="w-full py-12 md:py-24 lg:py-32">
-                    <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
-                        <div className="space-y-2">
-                            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                                Unlock Your Creative Potential with Our Motion Design Tool
-                            </h2>
-                            <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                                Elevate your motion design projects with our AI-powered tool, designed to streamline your workflow and
-                                unleash your creativity.
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-2 min-[400px]:flex-row lg:justify-end">
-                            <a
-                                className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                                href="#"
-                            >
-                                Join Beta
-                            </a>
-                            <a
-                                className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                                href="#"
-                            >
-                                Learn More
-                            </a>
-                        </div>
+                    <div>
+                        <button
+                            type="submit"
+                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                            Стать первым
+                        </button>
                     </div>
-                </section>
-            </main>
-            <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-                <p className="text-xs text-muted-foreground">© 2024 Motion Design Tool. All rights reserved.</p>
-                <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-                    <a className="text-xs hover:underline underline-offset-4" href="#">
-                        Terms of Service
-                    </a>
-                    <a className="text-xs hover:underline underline-offset-4" href="#">
-                        Privacy
-                    </a>
-                </nav>
-            </footer>
+                    {message && <p className="mt-4 text-center">{message}</p>}
+                </form>
+            </div>
+            {isSubmitted && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg text-center m-5">
+                        <p className="text-lg font-semibold">
+                            Вы успешно вошли в список ожидания! Ссылка для бета-тестирования придет на вашу почту.
+                        </p>
+                    </div>
+                </div>
+            )}
         </div>
-    )
-}
+    );
+};
 
 export default BetaPreview;

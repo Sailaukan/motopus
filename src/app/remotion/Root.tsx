@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sequence, useCurrentFrame, interpolate, spring } from 'remotion';
+import { Sequence, useCurrentFrame, interpolate } from 'remotion';
 
 interface CommandProps {
   type: string;
@@ -34,16 +34,20 @@ const interpolateColor = (frame: number, startFrame: number, endFrame: number, s
 };
 
 const renderComponent = (frame: number, type: string, props: { [key: string]: any }) => {
-  const duration = Math.max(props.duration, 30); // Ensure minimum duration of 30 frames
+  const duration = Math.max(props.duration, 30);
   const fadeInDuration = Math.min(15, duration / 4);
   const fadeOutDuration = Math.min(15, duration / 4);
 
   const commonStyles: React.CSSProperties = {
     position: 'absolute',
     color: interpolateColor(frame, props.start, props.start + duration, props.startColor, props.finishColor),
-    fontSize: `${interpolate(frame, [props.start, props.start + duration], [props.startSize, props.finishSize])}rem`,
-    top: `${interpolate(frame, [props.start, props.start + duration], [props.startTop, props.finishTop])}%`,
-    left: `${interpolate(frame, [props.start, props.start + duration], [props.startLeft, props.finishLeft])}%`,
+    fontSize: `${interpolate(frame, [props.start, props.start + duration], [props.startSize, props.finishSize])}px`,
+    top: `${interpolate(frame, [props.start, props.start + duration], [props.startTop, props.finishTop])}px`,
+    left: `${interpolate(frame, [props.start, props.start + duration], [props.startLeft, props.finishLeft])}px`,
+    transform: 'translate(-50%, -50%)',
+    textAlign: 'center',
+    width: 'auto',
+    maxWidth: '1200px', // Ensure text doesn't overflow screen width
     opacity: interpolate(
       frame,
       [props.start, props.start + fadeInDuration, props.start + duration - fadeOutDuration, props.start + duration],
@@ -54,76 +58,108 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
 
   const getTextAnimation = (animationType: string) => {
     switch (animationType) {
-      case 'bounce':
+      case 'slideOutRight':
         return {
-          transform: `translateY(${spring({
-            frame: frame - props.start,
-            fps: 30,
-            from: 0,
-            to: -20,
-            durationInFrames: props.duration,
-          })}px)`,
-        };
-      case 'rotate':
-        return {
-          transform: `rotate(${interpolate(
+          transform: `translateX(${interpolate(
             frame,
             [props.start, props.start + props.duration],
-            [0, 360]
-          )}deg)`,
+            [0, 1280]
+          )}px)`,
         };
-      case 'scale':
+      case 'slideOutLeft':
         return {
-          transform: `scale(${spring({
-            frame: frame - props.start,
-            fps: 30,
-            from: 0.5,
-            to: 1,
-            durationInFrames: props.duration,
-          })})`,
+          transform: `translateX(${interpolate(
+            frame,
+            [props.start, props.start + props.duration],
+            [0, -1280]
+          )}px)`,
+        };
+      case 'slideOutUp':
+        return {
+          transform: `translateY(${interpolate(
+            frame,
+            [props.start, props.start + props.duration],
+            [0, -720]
+          )}px)`,
+        };
+      case 'slideOutDown':
+        return {
+          transform: `translateY(${interpolate(
+            frame,
+            [props.start, props.start + props.duration],
+            [0, 720]
+          )}px)`,
+        };
+      case 'fastType':
+        const text = props.text;
+        const charsToShow = Math.floor(
+          interpolate(
+            frame,
+            [props.start, props.start + props.duration * 0.8],
+            [0, text.length],
+            { extrapolateRight: 'clamp' }
+          )
+        );
+        return {
+          clipPath: `inset(0 ${100 - (charsToShow / text.length) * 100}% 0 0)`,
+        };
+      case 'progressiveReveal':
+        const words = props.text.split(' ');
+        const wordsToShow = Math.floor(
+          interpolate(
+            frame,
+            [props.start, props.start + props.duration],
+            [1, words.length],
+            { extrapolateRight: 'clamp' }
+          )
+        );
+        return {
+          content: words.slice(0, wordsToShow).join(' '),
         };
       default:
         return {};
     }
   };
 
-  switch (type) {
-    case 'text':
+  if (type === 'text') {
+    const animationStyle = getTextAnimation(props.animation);
+
+    if (props.animation === 'progressiveReveal') {
       return (
         <div
           style={{
             ...commonStyles,
             fontFamily: 'SF Pro Display, Arial, sans-serif',
             fontWeight: 'bold',
-            ...getTextAnimation(props.animation),
+          }}
+        >
+          {animationStyle.content}
+        </div>
+      );
+    } else {
+      return (
+        <div
+          style={{
+            ...commonStyles,
+            fontFamily: 'SF Pro Display, Arial, sans-serif',
+            fontWeight: 'bold',
+            ...animationStyle,
           }}
         >
           {props.text}
         </div>
       );
-    case 'shape':
-      return (
-        <div
-          style={{
-            ...commonStyles,
-            width: `${interpolate(frame, [props.start, props.start + props.duration], [props.startSize, props.finishSize])}rem`,
-            height: `${interpolate(frame, [props.start, props.start + props.duration], [props.startSize, props.finishSize])}rem`,
-            backgroundColor: interpolateColor(frame, props.start, props.start + props.duration, props.startColor, props.finishColor),
-            borderRadius: props.shape === 'circle' ? '50%' : props.shape === 'triangle' ? '0' : '0%',
-            clipPath: props.shape === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' : 'none',
-          }}
-        />
-      );
-    default:
-      console.warn(`Unknown component type: ${type}`);
-      return null;
+    }
   }
+
+  console.warn(`Unknown component type: ${type}`);
+  return null;
 };
 
 export const Main: React.FC<MainProps> = ({ code }) => {
   const [videoJSON, setVideoJSON] = useState<{
     commands: CommandProps[];
-    background: string;
+    background: string | string[];
   } | null>(null);
 
   const frame = useCurrentFrame();
@@ -142,8 +178,25 @@ export const Main: React.FC<MainProps> = ({ code }) => {
     return <div>Loading or invalid JSON...</div>;
   }
 
+  const getBackgroundColor = () => {
+    if (typeof videoJSON.background === 'string') {
+      return videoJSON.background;
+    } else if (Array.isArray(videoJSON.background)) {
+      const index = Math.floor(frame / 30) % videoJSON.background.length;
+      return videoJSON.background[index];
+    }
+    return '#000';
+  };
+
   return (
-    <div style={{ flexGrow: 1, background: videoJSON.background || '#000' }}>
+    <div style={{
+      flexGrow: 1,
+      background: getBackgroundColor(),
+      position: 'relative',
+      width: '1280px',
+      height: '720px',
+      overflow: 'hidden',
+    }}>
       {videoJSON.commands.map((command, index) => (
         <Sequence key={index} from={command.props.start} durationInFrames={command.props.duration}>
           {renderComponent(frame, command.type, command.props)}

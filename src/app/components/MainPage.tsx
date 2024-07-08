@@ -10,93 +10,45 @@ import MainContent from './MainContent';
 import NavBar from './NavBar';
 
 const initialCode = JSON.stringify({
-    background: "linear-gradient(45deg, #1a1a1a, #4a4a4a)",
-    commands: [
+    "commands": [
         {
-            type: "text",
-            props: {
-                text: "AI Animation Generator",
-                startColor: "#FFFFFF",
-                finishColor: "#FFA500",
-                startSize: 5,
-                finishSize: 6,
-                startTop: 20,
-                finishTop: 25,
-                startLeft: 10,
-                finishLeft: 15,
-                start: 30,
-                duration: 90,
-                animation: "bounce"
+            "type": "text",
+            "props": {
+                "text": "Sliding out to the left",
+                "animation": "slideOutLeft",
+                "start": 0,
+                "duration": 60,
+                "startColor": "#FFFFFF",
+                "finishColor": "#FFFFFF",
+                "startSize": 60,
+                "finishSize": 60,
+                "startTop": 360,
+                "finishTop": 360,
+                "startLeft": 640,
+                "finishLeft": 640
             }
         },
         {
-            type: "text",
-            props: {
-                text: "Transform Your Ideas",
-                startColor: "#FFFFFF",
-                finishColor: "#00FF00",
-                startSize: 4.5,
-                finishSize: 5,
-                startTop: 30,
-                finishTop: 35,
-                startLeft: 20,
-                finishLeft: 25,
-                start: 120,
-                duration: 90,
-                animation: "rotate"
-            }
-        },
-        {
-            type: "shape",
-            props: {
-                shape: "circle",
-                startColor: "#FF0000",
-                finishColor: "#0000FF",
-                startSize: 3,
-                finishSize: 5,
-                startTop: 70,
-                finishTop: 65,
-                startLeft: 80,
-                finishLeft: 75,
-                start: 60,
-                duration: 120
-            }
-        },
-        {
-            type: "shape",
-            props: {
-                shape: "triangle",
-                startColor: "#FFFF00",
-                finishColor: "#FF00FF",
-                startSize: 4,
-                finishSize: 6,
-                startTop: 60,
-                finishTop: 55,
-                startLeft: 5,
-                finishLeft: 10,
-                start: 90,
-                duration: 150
-            }
-        },
-        {
-            type: "text",
-            props: {
-                text: "Unleash Creativity",
-                startColor: "#00FFFF",
-                finishColor: "#FF1493",
-                startSize: 4,
-                finishSize: 4.5,
-                startTop: 80,
-                finishTop: 75,
-                startLeft: 30,
-                finishLeft: 35,
-                start: 180,
-                duration: 120,
-                animation: "scale"
+            "type": "text",
+            "props": {
+                "text": "This sentence will appear word by word",
+                "animation": "progressiveReveal",
+                "start": 60,
+                "duration": 120,
+                "startColor": "#FFFFFF",
+                "finishColor": "#FFFFFF",
+                "startSize": 50,
+                "finishSize": 50,
+                "startTop": 360,
+                "finishTop": 360,
+                "startLeft": 640,
+                "finishLeft": 640
             }
         }
-    ]
+    ],
+    "background": "#000000"
 });
+
 
 interface ClaudeResponse {
     content: Array<{ text: string }>;
@@ -119,7 +71,7 @@ const MainPage: React.FC = () => {
             const res = await axios.post<ClaudeResponse>('/api/claude', {
                 messages: [{ role: 'user', content: combinedPrompt }],
                 model: 'claude-3-5-sonnet-20240620',
-                max_tokens: 4000,
+                max_tokens: 20000,
             });
             setResponse(res.data.content[0].text);
             setCode(res.data.content[0].text);
@@ -170,27 +122,28 @@ const MainPage: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-center">
-                    <div className="relative">
+                <div className="flex justify-center my-8 px-4">
+                    <div className="relative w-full max-w-[1280px] aspect-video">
                         {loading && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-opacity-50 bg-gray-700 z-10">
+                            <div className="absolute inset-0 flex items-center justify-center bg-opacity-50 bg-gray-700 z-10 rounded-lg">
                                 <div className="w-16 h-16 border-4 border-t-4 border-t-transparent border-white rounded-full animate-spin"></div>
                             </div>
                         )}
                         <Player
-                            className="border rounded-lg"
                             component={Main}
-                            durationInFrames={10 * 30}
+                            inputProps={{ code }}
+                            durationInFrames={900}
                             compositionWidth={1280}
-                            compositionHeight={500}
+                            compositionHeight={720}
                             fps={30}
                             controls
                             autoPlay
                             loop
                             style={{
-                                height: 400,
+                                width: '100%',
+                                height: '100%',
                             }}
-                            inputProps={{ code }}
+                            className="rounded-lg shadow-lg"
                         />
                     </div>
                 </div>
