@@ -1,6 +1,6 @@
 # Motopus - AI-Powered Motion Design Animation Generator
 
-Welcome to **Motopus**, the cutting-edge web application designed to generate stunning motion design animations using the power of AI. Leveraging advanced technologies and state-of-the-art tools, Motopus enables users to create high-quality 2D animations effortlessly.
+Welcome to **Motopus**, the cutting-edge web application designed to generate motion design animations using AI. Leveraging advanced technologies and state-of-the-art tools, Motopus enables users to effortlessly create high-quality video presentations, instagram reels, animated invitations and so on.
 
 ## Features
 
@@ -12,30 +12,19 @@ Welcome to **Motopus**, the cutting-edge web application designed to generate st
 
 Motopus is built using a robust and modern technology stack to ensure high performance, scalability, and ease of use:
 
-- **Next.js**: A powerful React framework for building fast and scalable web applications.
+- **Next.js**: A powerful React framework for building fast and scalable web applications and without running external server.
 - **TypeScript**: A superset of JavaScript that adds static typing, ensuring code reliability and maintainability.
-- **AWS Lambda**: Serverless computing service for running code in response to events, providing scalability and cost-efficiency.
-- **Remotion Library**: A React library for creating animations and videos programmatically.
-- **Claude 3.5 Sonnet API**: An advanced AI API for generating content based on user prompts.
+- **AWS Lambda**: Serverless computing for rendering a video in MP3 format in a short period by dividing the code into many lambda functions.
+- **Remotion Library**: A React library for creating animations and videos programmatically using TypeScript.
+- **Claude 3.5 Sonnet API**: An advanced AI API for generating commands and code in JSON format based on user prompts.
 - **Tailwind CSS**: A utility-first CSS framework for building custom designs without writing custom CSS.
 
 ## How It Works
 
 1. **User Input**: Enter your prompt describing the desired animation.
 2. **AI Processing**: The AI, powered by Claude 3.5 Sonnet API, processes the input and generates JSON commands for the animation.
-3. **Rendering**: The JSON commands are parsed and converted into TypeScript code using Remotion library components.
+3. **Rendering**: The JSON commands are parsed and converted into TypeScript code using both existing Remotion library components and functions that I create myself.
 4. **Preview**: The animation is rendered and previewed in real-time within the web app.
-5. **Export**: Once satisfied with the preview, the animation can be exported and shared on social networks or other platforms.
+5. **Export**: Once satisfied with the preview, the animation can be rendered on AWS Lambda Functions in MP3 format and exported.
 
-## Acknowledgements
-
-We would like to thank the following technologies and platforms for making Motopus possible:
-
-- [Next.js](https://nextjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [AWS Lambda](https://aws.amazon.com/lambda/)
-- [Remotion](https://www.remotion.dev/)
-- [Claude AI](https://claude.ai/)
-- [Tailwind CSS](https://tailwindcss.com/)
-
-Thank you for using Motopus! We hope you enjoy creating amazing animations with our app.
+*Works only on localhost. Have problems with deploy*
