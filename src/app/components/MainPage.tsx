@@ -71,7 +71,7 @@ const MainPage: React.FC = () => {
             const res = await axios.post<ClaudeResponse>('/api/claude', {
                 messages: [{ role: 'user', content: combinedPrompt }],
                 model: 'claude-3-5-sonnet-20240620',
-                max_tokens: 20000,
+                max_tokens: 4000,
             });
             setResponse(res.data.content[0].text);
             setCode(res.data.content[0].text);

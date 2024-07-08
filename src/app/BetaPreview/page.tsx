@@ -12,6 +12,14 @@ const BetaPreview: React.FC = () => {
         field: ''
     });
 
+    const [errors, setErrors] = useState({
+        email: '',
+        city: '',
+        country: '',
+        age: '',
+        field: ''
+    });
+
     const [message, setMessage] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -21,10 +29,34 @@ const BetaPreview: React.FC = () => {
             ...formData,
             [name]: value,
         });
+        // Clear error when user starts typing
+        setErrors({
+            ...errors,
+            [name]: '',
+        });
+    };
+
+    const validateForm = () => {
+        let isValid = true;
+        const newErrors = { ...errors };
+
+        Object.keys(formData).forEach((key) => {
+            if (!formData[key as keyof typeof formData]) {
+                newErrors[key as keyof typeof errors] = 'Незаполненно';
+                isValid = false;
+            } else {
+                newErrors[key as keyof typeof errors] = '';
+            }
+        });
+
+        setErrors(newErrors);
+        return isValid;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!validateForm()) return;
+
         try {
             const { data, error } = await supabase
                 .from('motopus_beta_users')
@@ -66,6 +98,7 @@ const BetaPreview: React.FC = () => {
                             value={formData.email}
                             onChange={handleChange}
                         />
+                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
@@ -80,6 +113,7 @@ const BetaPreview: React.FC = () => {
                                 value={formData.city}
                                 onChange={handleChange}
                             />
+                            {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
                         </div>
                         <div>
                             <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -93,6 +127,7 @@ const BetaPreview: React.FC = () => {
                                 value={formData.country}
                                 onChange={handleChange}
                             />
+                            {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
                         </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -109,6 +144,7 @@ const BetaPreview: React.FC = () => {
                                 value={formData.age}
                                 onChange={handleChange}
                             />
+                            {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age}</p>}
                         </div>
                         <div>
                             <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -127,6 +163,7 @@ const BetaPreview: React.FC = () => {
                                 <option value="study">Для учебы</option>
                                 <option value="other">Другое</option>
                             </select>
+                            {errors.field && <p className="text-red-500 text-sm mt-1">{errors.field}</p>}
                         </div>
                     </div>
                     <div>
