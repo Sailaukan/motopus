@@ -169,12 +169,23 @@ const BetaPreview: React.FC = () => {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#9333ea] to-[#3b82f6] px-4 py-6 relative">
 
-            <button
-                onClick={toggleLanguage}
-                className="bg-white rounded-full px-4 py-2 shadow-lg"
-            >
-                {language === 'ru' ? 'English' : 'Русский'}
-            </button>
+            <div className=" bg-white rounded-full shadow-lg flex">
+                <button
+                    onClick={() => setLanguage('en')}
+                    className={`px-3 py-2 rounded-l-full transition-opacity duration-300 ${language === 'en' ? 'opacity-100' : 'opacity-20 hover:opacity-75'
+                        }`}
+                >
+                    English
+                </button>
+                <div className="w-px bg-gray-300 my-2"></div>
+                <button
+                    onClick={() => setLanguage('ru')}
+                    className={`px-3 py-2 rounded-r-full transition-opacity duration-300 ${language === 'ru' ? 'opacity-100' : 'opacity-20 hover:opacity-75'
+                        }`}
+                >
+                    Русский
+                </button>
+            </div>
             <div className={`mt-4 max-w-md w-full bg-white rounded-lg shadow-lg p-10 ${isSubmitted ? 'blur-sm' : ''}`}>
 
                 <div className="text-center space-y-4">
