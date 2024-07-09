@@ -73,7 +73,7 @@ const BetaPreview: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#9333ea] to-[#3b82f6] px-4 py-6 relative">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#9333ea] to-[#3b82f6] px-4 py-6 relative">
             <div className={`max-w-md w-full bg-white rounded-lg shadow-lg p-10 ${isSubmitted ? 'blur-sm' : ''}`}>
                 <div className="text-center space-y-4">
                     <div className="flex justify-center">
@@ -176,6 +176,32 @@ const BetaPreview: React.FC = () => {
                     </div>
                     {message && <p className="mt-4 text-center">{message}</p>}
                 </form>
+            </div>
+            <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8 mt-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                        <div className="flex items-center">
+                            <svg className="w-6 h-6 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            <h4 className="text-lg font-semibold">AI-Powered</h4>
+                        </div>
+                        <p className="text-gray-600">
+                            Motopus - это мощный генератор анимаций для моушн-дизайна, работающий на базе искусственного интеллекта.
+                        </p>
+                    </div>
+                    <div className="space-y-4">
+                        <div className="flex items-center">
+                            <svg className="w-6 h-6 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <h4 className="text-lg font-semibold">Молниеносно быстро</h4>
+                        </div>
+                        <p className="text-gray-600">
+                            Создавайте потрясающие видео за считанные секунды. Наша технология позволяет генерировать уникальные анимации менее чем за 15 секунд!
+                        </p>
+                    </div>
+                </div>
             </div>
             {isSubmitted && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
