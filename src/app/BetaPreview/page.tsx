@@ -198,7 +198,7 @@ const BetaPreview: React.FC = () => {
                 <form className="space-y-4 mt-6" onSubmit={handleSubmit}>
                     <div>
                         <input
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
                             id="email"
                             name="email"
                             placeholder={t.email}
@@ -211,7 +211,7 @@ const BetaPreview: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <input
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
                                 id="city"
                                 name="city"
                                 placeholder={t.city}
@@ -222,7 +222,7 @@ const BetaPreview: React.FC = () => {
                         </div>
                         <div>
                             <input
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
                                 id="country"
                                 name="country"
                                 placeholder={t.country}
@@ -235,7 +235,7 @@ const BetaPreview: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <input
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
                                 id="age"
                                 name="age"
                                 placeholder={t.age}
@@ -247,7 +247,7 @@ const BetaPreview: React.FC = () => {
                         </div>
                         <div>
                             <select
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="text-sm custom-input w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
                                 id="field"
                                 name="field"
                                 value={formData.field}
@@ -273,6 +273,19 @@ const BetaPreview: React.FC = () => {
                     {message && <p className="mt-4 text-center">{message}</p>}
                 </form>
             </div>
+
+            {isSubmitted && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="absolute bg-white p-6 rounded-lg shadow-lg text-center m-5" style={{ top: '30%' }}>
+                        <p className="text-lg font-semibold">
+                            Вы успешно вошли в список ожидания!
+                        </p>
+                    </div>
+                </div>
+            )}
+
+
+
 
             <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8 mt-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,4 +1,4 @@
-'use client'; // This should be the very first line
+'use client';
 import BetaPreview from './BetaPreview/page';
 import MainPage from './components/MainPage';
 

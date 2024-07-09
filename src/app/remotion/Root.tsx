@@ -47,7 +47,7 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
     transform: 'translate(-50%, -50%)',
     textAlign: 'center',
     width: 'auto',
-    maxWidth: '1200px', // Ensure text doesn't overflow screen width
+    maxWidth: '1200px',
     opacity: interpolate(
       frame,
       [props.start, props.start + fadeInDuration, props.start + duration - fadeOutDuration, props.start + duration],
