@@ -30,6 +30,7 @@ interface Translations {
     submitButton: string;
     aiPowered: string;
     aiDescription: string;
+    modalWindow: string,
     lightning: string;
     speedDescription: string;
     successMessage: string;
@@ -55,6 +56,7 @@ const translations: LanguageTranslations = {
         country: "Country",
         age: "Age",
         interest: "Interest",
+        modalWindow: "You have successfully entered the waiting list!",
         submitButton: "Be the first",
         aiPowered: "AI-Powered",
         aiDescription: "Motopus is a powerful AI-based motion design animation generator.",
@@ -76,6 +78,7 @@ const translations: LanguageTranslations = {
         country: "Страна",
         age: "Возраст",
         interest: "Интерес",
+        modalWindow: "Вы успешно вошли в список ожидания!",
         submitButton: "Стать первым",
         aiPowered: "AI-Powered",
         aiDescription: "Motopus - это мощный генератор анимаций для моушн-дизайна, работающий на базе искусственного интеллекта.",
@@ -278,7 +281,7 @@ const BetaPreview: React.FC = () => {
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="absolute bg-white p-6 rounded-lg shadow-lg text-center m-5" style={{ top: '30%' }}>
                         <p className="text-lg font-semibold">
-                            Вы успешно вошли в список ожидания!
+                            {t.modalWindow}
                         </p>
                     </div>
                 </div>
