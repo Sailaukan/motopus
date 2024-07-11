@@ -287,9 +287,6 @@ const BetaPreview: React.FC = () => {
                 </div>
             )}
 
-
-
-
             <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8 mt-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">

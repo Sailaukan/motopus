@@ -15,7 +15,7 @@ const initialCode = JSON.stringify({
             "type": "text",
             "props": {
                 "text": "Sliding out to the left",
-                "animation": "slideOutLeft",
+                "animation": "slideInFromLeft",
                 "start": 0,
                 "duration": 60,
                 "startColor": "#FFFFFF",
@@ -24,7 +24,7 @@ const initialCode = JSON.stringify({
                 "finishSize": 60,
                 "startTop": 360,
                 "finishTop": 360,
-                "startLeft": 640,
+                "startLeft": 1280,
                 "finishLeft": 640
             }
         },
@@ -47,7 +47,9 @@ const initialCode = JSON.stringify({
         }
     ],
     "background": "#000000"
-});
+}
+
+);
 
 
 interface ClaudeResponse {

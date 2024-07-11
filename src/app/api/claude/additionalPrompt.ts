@@ -23,17 +23,17 @@ Generate JSON commands for a 30-second video (900 frames at 30 fps). The respons
     {
       "type": "text",
       "props": {
-        "text": "This sentence will appear word by word",
-        "animation": "progressiveReveal",
-        "start": 60,
-        "duration": 120,
-        "startColor": "#FFFFFF",
-        "finishColor": "#FFFFFF",
-        "startSize": 50,
-        "finishSize": 50,
-        "startTop": 360,
+        "text": "Varieties:",
+        "animation": "fastType",  // or whichever animation you're using
+        "start": 510,  // adjust this based on when you want the text to appear
+        "duration": 60,  // adjust as needed
+        "startColor": "#FFFF00",  // yellow color
+        "finishColor": "#FFFF00",
+        "startSize": 60,  // adjust font size as needed
+        "finishSize": 60,
+        "startTop": 360,  // This centers vertically (720/2)
         "finishTop": 360,
-        "startLeft": 640,
+        "startLeft": 640,  // This centers horizontally (1280/2)
         "finishLeft": 640
       }
     }
@@ -54,17 +54,17 @@ The video frame is 1280x720 pixels and should last 30 seconds (900 frames). Use 
 
 Available animations are:
 - "fastType": Rapidly types out the text
-- "slideOutLeft": Slides the text out to the left
-- "slideOutRight": Slides the text out to the right
-- "slideOutUp": Slides the text out upwards
-- "slideOutDown": Slides the text out downwards
 - "progressiveReveal": Reveals words one by one
+- "slideInFromTop": Slides the text in from the top
+- "slideInFromBottom": Slides the text in from the bottom
+- "slideInFromRight": Slides the text in from the right
+- "slideInFromLeft": Slides the text in from the left
 
 Ensure each command has appropriate start times and durations to create a coherent 30-second sequence. Use various animations to create an engaging video. Limit the amount of text in each command to ensure readability within the 1280x720 frame.
 
 The background can be a single color (like "#000000") or an array of colors for animated backgrounds.
 
-All requirement above must be followed to generate a video by the user prompt here:
+All requirements above must be followed to generate a video by the user prompt here:
 
 `;
 

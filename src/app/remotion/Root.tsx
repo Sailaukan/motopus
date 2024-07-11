@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sequence, useCurrentFrame, interpolate } from 'remotion';
+import { Sequence, useCurrentFrame, interpolate, Easing } from 'remotion';
 
 interface CommandProps {
   type: string;
@@ -34,6 +34,9 @@ const interpolateColor = (frame: number, startFrame: number, endFrame: number, s
 };
 
 const renderComponent = (frame: number, type: string, props: { [key: string]: any }) => {
+
+  const easeOutExpo = Easing.bezier(0.16, 1, 0.3, 1);
+
   const duration = Math.max(props.duration, 30);
   const fadeInDuration = Math.min(15, duration / 4);
   const fadeOutDuration = Math.min(15, duration / 4);
@@ -57,65 +60,81 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
   };
 
   const getTextAnimation = (animationType: string) => {
+
+    const progress = Math.min(1, Math.max(0, (frame - props.start) / props.duration));
+
     switch (animationType) {
-      case 'slideOutRight':
-        return {
-          transform: `translateX(${interpolate(
-            frame,
-            [props.start, props.start + props.duration],
-            [0, 1280]
-          )}px)`,
-        };
-      case 'slideOutLeft':
-        return {
-          transform: `translateX(${interpolate(
-            frame,
-            [props.start, props.start + props.duration],
-            [0, -1280]
-          )}px)`,
-        };
-      case 'slideOutUp':
-        return {
-          transform: `translateY(${interpolate(
-            frame,
-            [props.start, props.start + props.duration],
-            [0, -720]
-          )}px)`,
-        };
-      case 'slideOutDown':
-        return {
-          transform: `translateY(${interpolate(
-            frame,
-            [props.start, props.start + props.duration],
-            [0, 720]
-          )}px)`,
-        };
+
       case 'fastType':
         const text = props.text;
-        const charsToShow = Math.floor(
-          interpolate(
-            frame,
-            [props.start, props.start + props.duration * 0.8],
-            [0, text.length],
-            { extrapolateRight: 'clamp' }
-          )
+        const elasticEasing = Easing.elastic(1.5);
+        const typeProgress = interpolate(
+          frame,
+          [props.start, props.start + props.duration * 0.6],
+          [0, 1],
+          {
+            extrapolateRight: 'clamp',
+            easing: elasticEasing,
+          }
         );
+        const charsToShow = Math.floor(text.length * typeProgress);
         return {
           clipPath: `inset(0 ${100 - (charsToShow / text.length) * 100}% 0 0)`,
+          transform: `translate(-50%, -50%) scale(${interpolate(typeProgress, [0, 1], [0.95, 1], {
+            extrapolateRight: 'clamp',
+          })})`,
         };
+
       case 'progressiveReveal':
         const words = props.text.split(' ');
-        const wordsToShow = Math.floor(
-          interpolate(
-            frame,
-            [props.start, props.start + props.duration],
-            [1, words.length],
-            { extrapolateRight: 'clamp' }
-          )
+        const revealProgress = interpolate(
+          frame,
+          [props.start, props.start + props.duration * 0.8],
+          [0, 1],
+          {
+            extrapolateRight: 'clamp',
+            easing: easeOutExpo,
+          }
         );
+
+        const wordsToShow = Math.ceil(words.length * revealProgress);
+
         return {
           content: words.slice(0, wordsToShow).join(' '),
+          opacity: interpolate(
+            frame,
+            [props.start, props.start + 10],
+            [0, 1],
+            { extrapolateRight: 'clamp' }
+          ),
+          transform: `translateY(${interpolate(
+            frame,
+            [props.start, props.start + props.duration * 0.8],
+            [10, 0],
+            { extrapolateRight: 'clamp', easing: easeOutExpo }
+          )}px)`,
         };
+
+      case 'slideInFromTop':
+        return {
+          transform: `translateY(${(1 - progress) * -720}px)`,
+        };
+
+      case 'slideInFromBottom':
+        return {
+          transform: `translateY(${(1 - progress) * 720}px)`,
+        };
+
+      case 'slideInFromRight':
+        return {
+          transform: `translateX(${(1 - progress) * 1280}px)`,
+        };
+
+      case 'slideInFromLeft':
+        return {
+          transform: `translateX(${(1 - progress) * -1280}px)`,
+        };
+
       default:
         return {};
     }
