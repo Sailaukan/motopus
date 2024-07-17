@@ -1,7 +1,7 @@
 const NavBar = () => {
     return (
         <nav className="bg-background relative">
-            <div className="container flex items-center justify-between h-14 px-4 md:px-6">
+            <div className="container flex items-center justify-between h-14 px-4 md:px-6 pd-8">
                 <div className="flex items-center gap-2">
                     <img
                         loading="lazy"

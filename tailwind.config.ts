@@ -34,10 +34,19 @@ module.exports = {
           '50%': { opacity: '.5' },
           '100%': { opacity: '1' },
         },
+        ripple: {
+          "0%, 100%": {
+            transform: "translate(-50%, -50%) scale(1)",
+          },
+          "50%": {
+            transform: "translate(-50%, -50%) scale(0.9)",
+          },
+        },
       },
       animation: {
         bounce: 'bounce 2s infinite',
         pulse: 'pulse 2s infinite',
+        ripple: "ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite",
       },
     },
   },
