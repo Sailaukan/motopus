@@ -6,43 +6,28 @@ Generate JSON commands for a 30-second video (900 frames at 30 fps). The respons
     {
       "type": "text",
       "props": {
-        "text": "Sliding out to the left",
-        "animation": "slideOutLeft",
+        "text": "Example text",
+        "animation": "fastType",
         "start": 0,
-        "duration": 60,
+        "duration": 30,
         "startColor": "#FFFFFF",
         "finishColor": "#FFFFFF",
         "startSize": 60,
-        "finishSize": 60,
+        "finishSize": 70,
         "startTop": 360,
         "finishTop": 360,
         "startLeft": 640,
         "finishLeft": 640
       }
-    },
-    {
-      "type": "text",
-      "props": {
-        "text": "Varieties:",
-        "animation": "fastType",  // or whichever animation you're using
-        "start": 510,  // adjust this based on when you want the text to appear
-        "duration": 60,  // adjust as needed
-        "startColor": "#FFFF00",  // yellow color
-        "finishColor": "#FFFF00",
-        "startSize": 60,  // adjust font size as needed
-        "finishSize": 60,
-        "startTop": 360,  // This centers vertically (720/2)
-        "finishTop": 360,
-        "startLeft": 640,  // This centers horizontally (1280/2)
-        "finishLeft": 640
-      }
     }
   ],
-  "background": "#000000"
+  "background": ["#000000", "#111111", "#222222"]
 }
 
 The video frame is 1280x720 pixels and should last 30 seconds (900 frames). Use these guidelines:
-- Text size (startSize and finishSize) should be between 40 and 80 pixels for good visibility.
+- Text size (startSize and finishSize) must be between 40 and 80 pixels for good visibility.
+- You can animate text size by setting different values for startSize and finishSize.
+- The time gap between two components must not be longer than 10 frames. (first start + duration = second start)
 - Position text using pixel values: 
   - For horizontal center, use 640 for startLeft and finishLeft.
   - For vertical center, use 360 for startTop and finishTop.
@@ -55,17 +40,14 @@ The video frame is 1280x720 pixels and should last 30 seconds (900 frames). Use 
 Available animations are:
 - "fastType": Rapidly types out the text
 - "progressiveReveal": Reveals words one by one
-- "slideInFromTop": Slides the text in from the top
-- "slideInFromBottom": Slides the text in from the bottom
-- "slideInFromRight": Slides the text in from the right
-- "slideInFromLeft": Slides the text in from the left
+
+Duration of every animation must not be longer than 45 frames.
 
 Ensure each command has appropriate start times and durations to create a coherent 30-second sequence. Use various animations to create an engaging video. Limit the amount of text in each command to ensure readability within the 1280x720 frame.
 
-The background can be a single color (like "#000000") or an array of colors for animated backgrounds.
+The background must be an array of colors for animated backgrounds. The background color will change at the start of each new command, cycling through the array if there are more commands than colors.
 
-All requirements above must be followed to generate a video by the user prompt here:
-
+All requirements above must be strictly followed to generate a video by the user prompt here:
 `;
 
 export default additionalPrompt;

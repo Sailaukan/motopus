@@ -97,8 +97,8 @@ const MainPage: React.FC = () => {
                 <div className="bg-primary text-primary-foreground py-15 md:py-15 lg:py-20">
                     <div className="container px-4 md:px-6">
                         <div className="max-w-3xl mx-auto text-center space-y-4">
-                            <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold tracking-tight">Animate your ideas <br /> in 50 seconds</h1>
-                            <p className="text-m opacity-40 mb-8 md:text-s lg:text-l tracking-tight">Describe video you want and get <br />AI generated animation</p>
+                            <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold tracking-tight">Презентация как у Apple<br />за 15 секунд</h1>
+                            <p className="text-m opacity-40 mb-8 md:text-s lg:text-l tracking-tight">Опишите что вы хотите рассказать<br/>в презентации и нажмите Generate</p>
                             <div className="flex justify-center">
                                 <div className="relative w-full max-w-md">
                                     <input

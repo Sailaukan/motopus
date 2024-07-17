@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sequence, useCurrentFrame, interpolate, Easing } from 'remotion';
+import { Sequence, useCurrentFrame, interpolate, Easing, Video } from 'remotion';
 
 interface CommandProps {
   type: string;
@@ -13,6 +13,8 @@ interface CommandProps {
 interface MainProps {
   code: string;
 }
+
+
 
 const interpolateColor = (frame: number, startFrame: number, endFrame: number, startColor: string | undefined, endColor: string | undefined) => {
   const defaultColor = '#000000';
@@ -37,14 +39,17 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
 
   const easeOutExpo = Easing.bezier(0.16, 1, 0.3, 1);
 
-  const duration = Math.max(props.duration, 30);
-  const fadeInDuration = Math.min(15, duration / 4);
-  const fadeOutDuration = Math.min(15, duration / 4);
+  const duration = Math.max(props.duration, 120);
+  const fadeInDuration = Math.min(30, duration / 5);
+  const fadeOutDuration = Math.min(30, duration / 5);
 
   const commonStyles: React.CSSProperties = {
     position: 'absolute',
     color: interpolateColor(frame, props.start, props.start + duration, props.startColor, props.finishColor),
-    fontSize: `${interpolate(frame, [props.start, props.start + duration], [props.startSize, props.finishSize])}px`,
+    fontSize: `${interpolate(frame, [props.start, props.start + duration], [
+      Math.max(40, Math.min(props.startSize || 60, 80)),
+      Math.max(40, Math.min(props.finishSize || 60, 80))
+    ])}px`,
     top: `${interpolate(frame, [props.start, props.start + duration], [props.startTop, props.finishTop])}px`,
     left: `${interpolate(frame, [props.start, props.start + duration], [props.startLeft, props.finishLeft])}px`,
     transform: 'translate(-50%, -50%)',
@@ -61,16 +66,13 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
 
   const getTextAnimation = (animationType: string) => {
 
-    const progress = Math.min(1, Math.max(0, (frame - props.start) / props.duration));
-
     switch (animationType) {
-
       case 'fastType':
         const text = props.text;
-        const elasticEasing = Easing.elastic(1.5);
+        const elasticEasing = Easing.elastic(1.1);
         const typeProgress = interpolate(
           frame,
-          [props.start, props.start + props.duration * 0.6],
+          [props.start, props.start + props.duration * 1.7],
           [0, 1],
           {
             extrapolateRight: 'clamp',
@@ -89,7 +91,7 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
         const words = props.text.split(' ');
         const revealProgress = interpolate(
           frame,
-          [props.start, props.start + props.duration * 0.8],
+          [props.start, props.start + props.duration * 2],
           [0, 1],
           {
             extrapolateRight: 'clamp',
@@ -109,32 +111,11 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
           ),
           transform: `translateY(${interpolate(
             frame,
-            [props.start, props.start + props.duration * 0.8],
+            [props.start, props.start + props.duration * 0.7],
             [10, 0],
             { extrapolateRight: 'clamp', easing: easeOutExpo }
           )}px)`,
         };
-
-      case 'slideInFromTop':
-        return {
-          transform: `translateY(${(1 - progress) * -720}px)`,
-        };
-
-      case 'slideInFromBottom':
-        return {
-          transform: `translateY(${(1 - progress) * 720}px)`,
-        };
-
-      case 'slideInFromRight':
-        return {
-          transform: `translateX(${(1 - progress) * 1280}px)`,
-        };
-
-      case 'slideInFromLeft':
-        return {
-          transform: `translateX(${(1 - progress) * -1280}px)`,
-        };
-
       default:
         return {};
     }
@@ -181,6 +162,7 @@ export const Main: React.FC<MainProps> = ({ code }) => {
     background: string | string[];
   } | null>(null);
 
+
   const frame = useCurrentFrame();
 
   useEffect(() => {
@@ -197,12 +179,19 @@ export const Main: React.FC<MainProps> = ({ code }) => {
     return <div>Loading or invalid JSON...</div>;
   }
 
+  const sortedCommands = [...videoJSON.commands].sort((a, b) => a.props.start - b.props.start);
+
   const getBackgroundColor = () => {
     if (typeof videoJSON.background === 'string') {
       return videoJSON.background;
     } else if (Array.isArray(videoJSON.background)) {
-      const index = Math.floor(frame / 30) % videoJSON.background.length;
-      return videoJSON.background[index];
+      const currentCommandIndex = sortedCommands.findIndex((cmd, index) => {
+        const nextCmd = sortedCommands[index + 1];
+        return frame >= cmd.props.start && (!nextCmd || frame < nextCmd.props.start);
+      });
+
+      const backgroundIndex = currentCommandIndex === -1 ? 0 : currentCommandIndex % videoJSON.background.length;
+      return videoJSON.background[backgroundIndex];
     }
     return '#000';
   };
@@ -219,6 +208,11 @@ export const Main: React.FC<MainProps> = ({ code }) => {
       {videoJSON.commands.map((command, index) => (
         <Sequence key={index} from={command.props.start} durationInFrames={command.props.duration}>
           {renderComponent(frame, command.type, command.props)}
+
+        <Video
+          loop
+          src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        />
         </Sequence>
       ))}
     </div>
