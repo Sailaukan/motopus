@@ -5,10 +5,9 @@ import { Player } from "@remotion/player";
 import { Main } from '../remotion/Root';
 import axios from 'axios';
 import additionalPrompt from "../api/claude/additionalPrompt";
-import Footer from './Footer';
-import MainContent from './MainContent';
 import NavBar from './NavBar';
-
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 
 const initialCode = JSON.stringify({
     "commands": [
@@ -48,10 +47,7 @@ const initialCode = JSON.stringify({
         }
     ],
     "background": "#000000"
-}
-
-);
-
+});
 
 interface ClaudeResponse {
     content: Array<{ text: string }>;
@@ -60,14 +56,12 @@ interface ClaudeResponse {
 const MainPage: React.FC = () => {
     const [text, setText] = useState<string>('');
     const [code, setCode] = useState<string>(initialCode);
-    const [response, setResponse] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
     const combinedPrompt = `${additionalPrompt}${text}`;
 
     const handleSubmit = async (e: FormEvent<HTMLElement>) => {
         e.preventDefault();
-        console.log(combinedPrompt);
         setLoading(true);
 
         try {
@@ -76,10 +70,7 @@ const MainPage: React.FC = () => {
                 model: 'claude-3-5-sonnet-20240620',
                 max_tokens: 4000,
             });
-            setResponse(res.data.content[0].text);
             setCode(res.data.content[0].text);
-            console.log(res.data.content[0].text);
-            console.log(code);
         } catch (error) {
             console.error('Error:', error);
         } finally {
@@ -87,51 +78,58 @@ const MainPage: React.FC = () => {
         }
     };
 
-    const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setText(event.target.value);
-    }
-
     return (
-        <div>
-            <div className="flex flex-col min-h-[100dvh]">
-                <NavBar />
-                <div className="bg-primary text-primary-foreground py-15 md:py-15 lg:py-20">
-                    <div className="container px-4 md:px-6">
-                        <div className="max-w-3xl mx-auto text-center space-y-4">
-                            <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold tracking-tight">Презентация как у Apple<br />за 15 секунд</h1>
-                            <p className="text-m opacity-40 mb-8 md:text-s lg:text-l tracking-tight">Опишите что вы хотите рассказать<br/>в презентации и нажмите Generate</p>
-                            <div className="flex justify-center">
-                                <div className="relative w-full max-w-md">
-                                    <input
-                                        className="flex w-full border border-input bg-background px-5 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pr-24 h-12 md:h-14 lg:h-16 rounded-lg"
-                                        placeholder="Dynamic video presentation about Brawl Stars"
-                                        type="text"
-                                        onChange={handleInput}
-                                        style={{
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden'
-                                        }}
-                                    />
-                                    <button
-                                        className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 hover:text-purple-500 py-4 absolute right-1 top-1/2 -translate-y-1/2 h-10 md:h-12 lg:h-14 px-6 rounded-full"
-                                        type="submit"
-                                        onClick={handleSubmit}
-                                    >
-                                        Generate
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div className="bg-white text-black min-h-screen">
+            <NavBar />
+            <main className="container mx-auto px-4 py-12">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mt-10 mb-4">
+                    Animate your ideas <br className="hidden sm:inline" />
+                    in 15 seconds
+                </h1>
+                <p className="text-sm md:text-base lg:text-lg text-center text-gray-400 mb-8">
+                    Describe the video you want and get<br className="sm:hidden" /> AI generated animation
+                </p>
+
+                <form onSubmit={handleSubmit} className="max-w-2xl mx-auto flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                    <Input
+                        type="text"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        placeholder="Colorful preview for Instagram story"
+                        className="placeholder-gray-200 py-6 px-5 w-full"
+                    />
+                    <Button type="submit" className="py-6 px-8 bg-purple-600 hover:bg-purple-400 w-full sm:w-auto">
+                        Generate
+                    </Button>
+                </form>
+
+                <div className="max-w-2xl mx-auto mt-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                    <Button className="p-3 w-full border border-gray-300 bg-gray-100 hover:border-purple-600 text-gray-800 hover:bg-purple-600 hover:text-white transition-colors duration-300 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="mr-1" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
+                        </svg>
+                        Instagram story
+                    </Button>
+                    <Button className="p-3 w-full border border-gray-300 bg-gray-100 hover:border-purple-600 text-gray-800 hover:bg-purple-600 hover:text-white transition-colors duration-300 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="mr-1" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8.5 6a.5.5 0 1 0-1 0h-2A1.5 1.5 0 0 0 4 7.5v2A1.5 1.5 0 0 0 5.5 11h.473l-.447 1.342a.5.5 0 1 0 .948.316L7.027 11H7.5v1a.5.5 0 0 0 1 0v-1h.473l.553 1.658a.5.5 0 1 0 .948-.316L10.027 11h.473A1.5 1.5 0 0 0 12 9.5v-2A1.5 1.5 0 0 0 10.5 6zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5z" />
+                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                        </svg>
+                        Video presentation
+                    </Button>
+                    <Button className="p-3 w-full border border-gray-300 bg-gray-100 hover:border-purple-600 text-gray-800 hover:bg-purple-600 hover:text-white transition-colors duration-300 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="mr-1" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 9.984C10.403 9.506 12 7.48 12 5a4 4 0 0 0-8 0c0 2.48 1.597 4.506 4 4.984M13 5c0 2.837-1.789 5.227-4.52 5.901l.244.487a.25.25 0 1 1-.448.224l-.008-.017c.008.11.02.202.037.29.054.27.161.488.419 1.003.288.578.235 1.15.076 1.629-.157.469-.422.867-.588 1.115l-.004.007a.25.25 0 1 1-.416-.278c.168-.252.4-.6.533-1.003.133-.396.163-.824-.049-1.246l-.013-.028c-.24-.48-.38-.758-.448-1.102a3 3 0 0 1-.052-.45l-.04.08a.25.25 0 1 1-.447-.224l.244-.487C4.789 10.227 3 7.837 3 5a5 5 0 0 1 10 0m-6.938-.495a2 2 0 0 1 1.443-1.443C7.773 2.994 8 2.776 8 2.5s-.226-.504-.498-.459a3 3 0 0 0-2.46 2.461c-.046.272.182.498.458.498s.494-.227.562-.495" />
+                        </svg>
+                        Invitation to party
+                    </Button>
                 </div>
-                <div className="flex justify-center my-8 px-4">
-                    <div className="relative w-full max-w-[1280px] aspect-video">
-                        {loading && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-opacity-50 bg-gray-700 z-10 rounded-lg">
-                                <div className="w-16 h-16 border-4 border-t-4 border-t-transparent border-white rounded-full animate-spin"></div>
-                            </div>
-                        )}
+
+
+                {loading && <div className="text-center mt-8">Loading...</div>}
+
+                {!loading && code && (
+                    <div className="mt-8">
                         <Player
                             component={Main}
                             inputProps={{ code }}
@@ -144,15 +142,23 @@ const MainPage: React.FC = () => {
                             loop
                             style={{
                                 width: '100%',
-                                height: '100%',
+                                aspectRatio: '16/9',
                             }}
-                            className="rounded-lg shadow-lg"
                         />
                     </div>
-                </div>
-                <MainContent />
-                <Footer />
-            </div>
+                )}
+
+                <section className="mt-16">
+                    <h2 className="text-3xl font-bold text-center mb-8">Join our community of creators</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="bg-gray-900 p-4 rounded-md border border-gray-700">
+                            <div className="bg-gray-800 h-40 mb-4 rounded-md"></div>
+                            <p>Video presentation for airline company</p>
+                            <button className="text-purple-500 mt-2 hover:text-purple-400">Edit</button>
+                        </div>
+                    </div>
+                </section>
+            </main>
         </div>
     );
 }
