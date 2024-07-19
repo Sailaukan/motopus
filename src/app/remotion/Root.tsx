@@ -209,10 +209,10 @@ export const Main: React.FC<MainProps> = ({ code }) => {
         <Sequence key={index} from={command.props.start} durationInFrames={command.props.duration}>
           {renderComponent(frame, command.type, command.props)}
 
-        <Video
+        {/* <Video
           loop
           src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-        />
+        /> */}
         </Sequence>
       ))}
     </div>
