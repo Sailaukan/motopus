@@ -11,6 +11,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.1",
     "@headlessui/react": "^2.1.2",
+    "@radix-ui/react-scroll-area": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@remotion/cli": "4.0.177",
     "@remotion/lambda": "4.0.177",
@@ -35,7 +36,8 @@
     "remotion": "^4.0.177",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^20",
