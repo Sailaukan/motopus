@@ -196,30 +196,6 @@ const EditorPage: React.FC = () => {
                                         <div className="relative p-3 w-32 lg:w-36 h-20 bg-gray-100 rounded-md hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-in-out cursor-pointer">
                                             <span className="absolute bottom-0 left-0 px-2 py-1 m-1 text-xs bg-black bg-opacity-50 text-white rounded">1</span>
                                         </div>
-                                        <div className="relative p-3 w-32 lg:w-36 h-20 bg-gray-100 rounded-md hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-in-out cursor-pointer">
-                                            <span className="absolute bottom-0 left-0 px-2 py-1 m-1 text-xs bg-black bg-opacity-50 text-white rounded">1</span>
-                                        </div>
-                                        <div className="relative p-3 w-32 lg:w-36 h-20 bg-gray-100 rounded-md hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-in-out cursor-pointer">
-                                            <span className="absolute bottom-0 left-0 px-2 py-1 m-1 text-xs bg-black bg-opacity-50 text-white rounded">1</span>
-                                        </div>
-                                        <div className="relative p-3 w-32 lg:w-36 h-20 bg-gray-100 rounded-md hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-in-out cursor-pointer">
-                                            <span className="absolute bottom-0 left-0 px-2 py-1 m-1 text-xs bg-black bg-opacity-50 text-white rounded">1</span>
-                                        </div>
-                                        <div className="relative p-3 w-32 lg:w-36 h-20 bg-gray-100 rounded-md hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-in-out cursor-pointer">
-                                            <span className="absolute bottom-0 left-0 px-2 py-1 m-1 text-xs bg-black bg-opacity-50 text-white rounded">1</span>
-                                        </div>
-                                        <div className="relative p-3 w-32 lg:w-36 h-20 bg-gray-100 rounded-md hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-in-out cursor-pointer">
-                                            <span className="absolute bottom-0 left-0 px-2 py-1 m-1 text-xs bg-black bg-opacity-50 text-white rounded">1</span>
-                                        </div>
-                                        <div className="relative p-3 w-32 lg:w-36 h-20 bg-gray-100 rounded-md hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-in-out cursor-pointer">
-                                            <span className="absolute bottom-0 left-0 px-2 py-1 m-1 text-xs bg-black bg-opacity-50 text-white rounded">1</span>
-                                        </div>
-                                        <div className="relative p-3 w-32 lg:w-36 h-20 bg-gray-100 rounded-md hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-in-out cursor-pointer">
-                                            <span className="absolute bottom-0 left-0 px-2 py-1 m-1 text-xs bg-black bg-opacity-50 text-white rounded">1</span>
-                                        </div>
-                                        <div className="relative p-3 w-32 lg:w-36 h-20 bg-gray-100 rounded-md hover:bg-gray-200 hover:scale-105 transition transform duration-200 ease-in-out cursor-pointer">
-                                            <span className="absolute bottom-0 left-0 px-2 py-1 m-1 text-xs bg-black bg-opacity-50 text-white rounded">1</span>
-                                        </div>
 
                                         <div className="relative p-3 w-32 lg:w-36 h-20 rounded-md cursor-pointer text-gray-400 border-gray-200 border-2 hover:scale-105 transition transform duration-200 flex items-center justify-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 18 18">

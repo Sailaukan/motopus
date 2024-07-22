@@ -18,7 +18,7 @@ const LoadingAnimation: React.FC = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setLoadingText(loadingPhrases[Math.floor(Math.random() * loadingPhrases.length)]);
-        }, 2000);
+        }, 4000);
 
         return () => clearInterval(interval);
     }, []);

@@ -10,6 +10,8 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import LoadingAnimation from './LoadingAnimation';
 import NumberTicker from "@/app/components/ui/number-ticker";
+import LandingInfo from './LandingInfo';
+import Footer from './Footer';
 
 const initialCode = JSON.stringify({
     "commands": [
@@ -61,6 +63,7 @@ const MainPage: React.FC = () => {
     const setCode = useCodeStore(state => state.setCode);
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
+    
 
     const combinedPrompt = `${additionalPrompt}${text}`;
 
@@ -92,8 +95,8 @@ const MainPage: React.FC = () => {
     return (
         <div className="bg-white text-black min-h-screen">
             <NavBar />
-            <main className="container mx-auto px-4 py-12">
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-center mt-28 lg:mt-32 mb-4">
+            <main className="container mx-auto px-4 pt-12 mb-28">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-center mt-28 lg:mt-32 mb-4">
                     Animate your ideas <br className="hidden sm:inline" />
                     in <NumberTicker value={15} /> seconds
                 </h1>
@@ -114,7 +117,7 @@ const MainPage: React.FC = () => {
                     </Button>
                 </form>
 
-                <div className="max-w-2xl mx-auto mt-4 mb-20 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <div className="max-w-2xl mx-auto mt-4 mb-0 md:mb-6 lg:mb-10 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                     <Button
                         onClick={() => handleButtonClick("Creative Instagram story about Almaty")}
                         className="p-3 w-full border border-gray-300 bg-gray-100 hover:border-purple-600 text-gray-800 hover:bg-purple-600 hover:text-white transition-colors duration-300 flex items-center justify-center"
@@ -145,111 +148,11 @@ const MainPage: React.FC = () => {
                     </Button>
                 </div>
 
-                <div className="border-t-2 border-gray-200 mt-32 mb-10"></div>
-
                 {loading && <LoadingAnimation/>}
 
-                <section className="w-full py-12 md:py-14 lg:py-16">
-                    <h2 className="text-3xl font-bold text-center mb-10">What our users generated?</h2>
-                    <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-6">
-                        <a
-                            className="shadow-md hover:shadow-xl group relative overflow-hidden rounded-lg transition-all hover:scale-105 focus:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            href="#"
-                            rel="ugc"
-                        >
-                            <img
-                                src="/placeholder.svg"
-                                alt="Card Image"
-                                width="400"
-                                height="300"
-                                className="h-60 w-full object-cover transition-all group-hover:scale-105 group-focus:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-                            <div className="absolute bottom-0 left-0 right-0 px-6 pb-4">
-                                <h3 className="text-xl font-semibold text-card-foreground group-hover:underline group-focus:underline">
-                                    Cozy Mountain Retreat
-                                </h3>
-                            </div>
-                        </a>
-                        <a
-                            className="shadow-md hover:shadow-xl group relative overflow-hidden rounded-lg transition-all hover:scale-105 focus:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            href="#"
-                            rel="ugc"
-                        >
-                            <img
-                                src="/placeholder.svg"
-                                alt="Card Image"
-                                width="400"
-                                height="300"
-                                className="h-60 w-full object-cover transition-all group-hover:scale-105 group-focus:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-                            <div className="absolute bottom-0 left-0 right-0 px-6 pb-4">
-                                <h2 className="text-xl font-semibold text-card-foreground group-hover:underline group-focus:underline">
-                                    Beachfront Villa
-                                </h2>
-                            </div>
-                        </a>
-                        <a
-                            className="shadow-md hover:shadow-xl group relative overflow-hidden rounded-lg transition-all hover:scale-105 focus:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            href="#"
-                            rel="ugc"
-                        >
-                            <img
-                                src="/placeholder.svg"
-                                alt="Card Image"
-                                width="400"
-                                height="300"
-                                className="h-60 w-full object-cover transition-all group-hover:scale-105 group-focus:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-                            <div className="absolute bottom-0 left-0 right-0 px-6 pb-4">
-                                <h3 className="text-xl font-semibold text-card-foreground group-hover:underline group-focus:underline">
-                                    Countryside Estate
-                                </h3>
-                            </div>
-                        </a>
-                        <a
-                            className="shadow-md hover:shadow-xl group relative overflow-hidden rounded-lg transition-all hover:scale-105 focus:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            href="#"
-                            rel="ugc"
-                        >
-                            <img
-                                src="/placeholder.svg"
-                                alt="Card Image"
-                                width="400"
-                                height="300"
-                                className="h-60 w-full object-cover transition-all group-hover:scale-105 group-focus:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-                            <div className="absolute bottom-0 left-0 right-0 px-6 pb-4">
-                                <h3 className="text-xl font-semibold text-card-foreground group-hover:underline group-focus:underline">
-                                    Luxury Loft
-                                </h3>
-                            </div>
-                        </a>
-                        <a
-                            className="shadow-md hover:shadow-xl group relative overflow-hidden rounded-lg transition-all hover:scale-105 focus:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            href="#"
-                            rel="ugc"
-                        >
-                            <img
-                                src="/placeholder.svg"
-                                alt="Card Image"
-                                width="400"
-                                height="300"
-                                className="h-60 w-full object-cover transition-all group-hover:scale-105 group-focus:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-                            <div className="absolute bottom-0 left-0 right-0 px-6 pb-4">
-                                <h3 className="text-xl font-semibold text-card-foreground group-hover:underline group-focus:underline">
-                                    Rustic Farmhouse
-                                </h3>
-                            </div>
-                        </a>
-                    </div>
-                </section>
             </main>
+            <LandingInfo/>
+            <Footer/>
         </div>
     );
 }
