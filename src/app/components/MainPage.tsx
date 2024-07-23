@@ -12,7 +12,8 @@ import LoadingAnimation from './LoadingAnimation';
 import NumberTicker from "@/app/components/ui/number-ticker";
 import LandingInfo from './LandingInfo';
 import Footer from './Footer';
-
+import { createProject } from '@/lib/action';
+import { useAuth } from "@clerk/nextjs";
 
 interface ClaudeResponse {
     content: Array<{ text: string }>;
@@ -23,14 +24,20 @@ const MainPage: React.FC = () => {
     const code = useCodeStore(state => state.code);
     const setCode = useCodeStore(state => state.setCode);
     const router = useRouter();
+    
     const [loading, setLoading] = useState<boolean>(false);
-
-
+    const { isLoaded, userId, sessionId, getToken } = useAuth();
     const combinedPrompt = `${additionalPrompt}${text}`;
 
     const handleSubmit = async (e: FormEvent<HTMLElement>) => {
         setLoading(true);
         e.preventDefault();
+
+        if (!userId) {
+            console.error("User not authenticated");
+            setLoading(false);
+            return;
+        }
 
         try {
             const res = await axios.post<ClaudeResponse>('/api/claude', {
@@ -38,7 +45,11 @@ const MainPage: React.FC = () => {
                 model: 'claude-3-5-sonnet-20240620',
                 max_tokens: 4000,
             });
-            setCode(res.data.content.map(item => item.text).join(' '));
+            const generatedCode = res.data.content.map(item => item.text).join(' ');
+            setCode(generatedCode);
+
+            await createProject(userId, text, generatedCode);
+
             router.push('/Editor');
 
         } catch (error) {
@@ -51,7 +62,6 @@ const MainPage: React.FC = () => {
     const handleButtonClick = (newText: string) => {
         setText(newText);
     };
-
 
     return (
         <div className="bg-white text-black min-h-screen">

@@ -8,6 +8,7 @@ import {
   UserButton
 } from '@clerk/nextjs'
 import Head from "next/head";
+import { connectToMongoDB } from "@/lib/connectDB";
 
 export const metadata: Metadata = {
   title: "Motopus",
@@ -19,6 +20,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  connectToMongoDB(); 
   return (
     <ClerkProvider>
       <html lang="en">

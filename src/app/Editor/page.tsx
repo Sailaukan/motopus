@@ -8,6 +8,8 @@ import React, { useState, useEffect } from 'react';
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import NavBar from "../components/NavBar";
+import axios from 'axios';
+import { useAuth } from "@clerk/nextjs";
 
 const EditorPage: React.FC = () => {
 
@@ -19,17 +21,24 @@ const EditorPage: React.FC = () => {
     const [chosenItem, setChosenItem] = useState<string | null>("1");
     const router = useRouter();
 
-    interface Item {
-        id: string;
-        text: string;
-    }
+    const [videoCommands, setVideoCommands] = useState<any[]>([]);
+    const { userId } = useAuth();
 
-    const items: Item[] = [
-        { id: '1', text: "Preview for Instagram story with dynamic animations" },
-        { id: '2', text: "Colorful background" },
-        { id: '3', text: "Bold text" },
-        { id: '4', text: "Animation" }
-    ];
+    useEffect(() => {
+        if (userId) {
+            fetchVideoCommands();
+        }
+    }, [userId]);
+
+    const fetchVideoCommands = async () => {
+        try {
+            const response = await axios.get(`/api/videoCommands?userId=${userId}`);
+            setVideoCommands(response.data);
+
+        } catch (error) {
+            console.error('Error fetching video commands:', error);
+        }
+    };
 
     useEffect(() => {
         if (isEditOpen) {
@@ -45,28 +54,7 @@ const EditorPage: React.FC = () => {
 
     return (
         <div className="flex flex-col min-h-screen bg-white text-black sm:mt-10 md:mt-14 mt-12">
-
-            {/* <nav className="bg-background fixed top-0 left-0 right-0 z-50">
-                <div className="border-b border-gray-400 container flex items-center justify-between h-12 sm:h-14 px-2 sm:px-4 md:px-6 py-6 sm:py-8">
-                    <div onClick={() => router.push('/')} className="flex items-center gap-1 sm:gap-2 hover:cursor-pointer hover:text-gray-600">
-                        <img
-                            loading="lazy"
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/9c4d4fbc74bacfefbef7172e23269ab34bddd531a51dc11bc89bb4fe76e05dd4?apiKey=4b5f1316a87a4001a6d1a0d442d42b35&"
-                            className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain"
-                            alt="Motopus logo"
-                        />
-                        <span className="text-xl sm:text-2xl font-bold">motopus</span>
-                    </div>
-
-                    <button className="bg-purple-600 text-white px-10 py-3 lg:px-5 lg:py-3 rounded-md text-xs sm:text-sm hover:bg-purple-700 transition-colors shadow-lg">
-                        Sign Up
-                    </button>
-                </div>
-            </nav> */}
-
-            <NavBar/>
-
-
+            <NavBar />
             <div className="flex flex-1 relative">
                 <aside className={`
                     ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -75,30 +63,29 @@ const EditorPage: React.FC = () => {
                 `}>
                     <h2 className="mb-4 text-base font-semibold">History</h2>
                     <ul className="space-y-2">
-                        {items.map((item) => (
+                        {videoCommands.map((command, index) => (
                             <li
-                                key={item.id}
-                                onClick={() => setChosenItem(item.id)}
-                                className={`
-            py-2 px-4 rounded-lg overflow-hidden whitespace-nowrap group 
-            cursor-pointer transition-colors duration-300
-            ${chosenItem === item.id
-                                        ? 'bg-purple-500 hover:bg-purple-400 text-white'
-                                        : 'bg-gray-100 hover:bg-gray-200'}
-          `}
+                                key={command._id || index}
+                                onClick={() => {
+                                    setChosenItem(command._id);
+                                    setCode(command.generatedCode);
+                                }}
+                                className={`py-2 px-4 rounded-lg overflow-hidden whitespace-nowrap cursor-pointer transition-colors duration-300 ${chosenItem === command._id ? 'bg-purple-500 text-white hover:bg-purple-400' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
+
                             >
                                 <div
-                                    className={`
-              inline-block 
-              ${item.text.length > 20 ? 'group-hover:animate-marquee' : ''}
-            `}
+                                    className={`inline-block ${command.prompt > 20 ? 'group-hover:animate-marquee' : ''}`}
                                 >
-                                    {item.text}
+                                    {command.prompt}
                                 </div>
+
                             </li>
                         ))}
                     </ul>
-                    <div className="border-t-2 border-gray-200 my-4"></div>
+
+
+                    <div className="border-t-2 border-gray-200 my-4" />
+
                     <button className="w-full py-2 px-4 text-left text-gray-600 border-gray-300 border rounded-lg hover:bg-gray-200 hover:text-gray-800 transition-colors duration-300">
                         +  Create new video
                     </button>
@@ -160,8 +147,6 @@ const EditorPage: React.FC = () => {
                     </div>
                 )}
 
-
-
                 < main className={`flex-1 p-4 transition-all duration-300 ease-in-out overflow-hidden ${isSidebarOpen ? 'md:ml-64' : 'ml-0'}`}>
                     <div className="max-w-full overflow-hidden">
                         <div className="relative rounded-lg lg:p-2 py-20 px-2 md:py-0 md:px-0 my-0 bg-purple-100 lg:my-5">
@@ -219,17 +204,3 @@ const EditorPage: React.FC = () => {
 }
 
 export default EditorPage
-
-
-
-
-
-
-
-
-
-
-
-
-
-
