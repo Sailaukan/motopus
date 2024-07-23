@@ -6,8 +6,8 @@ import RootLayout from './RootLayout';
 export default function Home() {
   return (
     <RootLayout>
-      {/* <MainPage /> */}
-      <BetaPreview/>
+      <MainPage />
+      {/* <BetaPreview/> */}
     </RootLayout>
   );
 }

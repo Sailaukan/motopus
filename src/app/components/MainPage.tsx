@@ -13,45 +13,6 @@ import NumberTicker from "@/app/components/ui/number-ticker";
 import LandingInfo from './LandingInfo';
 import Footer from './Footer';
 
-const initialCode = JSON.stringify({
-    "commands": [
-        {
-            "type": "text",
-            "props": {
-                "text": "Sliding out to the left",
-                "animation": "slideInFromLeft",
-                "start": 0,
-                "duration": 60,
-                "startColor": "#FFFFFF",
-                "finishColor": "#FFFFFF",
-                "startSize": 60,
-                "finishSize": 60,
-                "startTop": 360,
-                "finishTop": 360,
-                "startLeft": 1280,
-                "finishLeft": 640
-            }
-        },
-        {
-            "type": "text",
-            "props": {
-                "text": "This sentence will appear word by word",
-                "animation": "progressiveReveal",
-                "start": 60,
-                "duration": 120,
-                "startColor": "#FFFFFF",
-                "finishColor": "#FFFFFF",
-                "startSize": 50,
-                "finishSize": 50,
-                "startTop": 360,
-                "finishTop": 360,
-                "startLeft": 640,
-                "finishLeft": 640
-            }
-        }
-    ],
-    "background": "#000000"
-});
 
 interface ClaudeResponse {
     content: Array<{ text: string }>;
@@ -63,7 +24,7 @@ const MainPage: React.FC = () => {
     const setCode = useCodeStore(state => state.setCode);
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
-    
+
 
     const combinedPrompt = `${additionalPrompt}${text}`;
 
@@ -148,11 +109,11 @@ const MainPage: React.FC = () => {
                     </Button>
                 </div>
 
-                {loading && <LoadingAnimation/>}
+                {loading && <LoadingAnimation />}
 
             </main>
-            <LandingInfo/>
-            <Footer/>
+            <LandingInfo />
+            <Footer />
         </div>
     );
 }

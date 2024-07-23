@@ -7,6 +7,7 @@ import {
   SignedOut,
   UserButton
 } from '@clerk/nextjs'
+import Head from "next/head";
 
 export const metadata: Metadata = {
   title: "Motopus",
@@ -22,16 +23,16 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body>
-        <header>
-            <SignedOut>
+          <header>
+            {/* <SignedOut>
               <SignInButton />
             </SignedOut>
             <SignedIn>
               <UserButton />
-            </SignedIn>
+            </SignedIn> */}
           </header>
           {children}
-          </body>
+        </body>
       </html>
     </ClerkProvider>
   );

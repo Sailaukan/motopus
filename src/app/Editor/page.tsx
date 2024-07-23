@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
+import NavBar from "../components/NavBar";
 
 const EditorPage: React.FC = () => {
 
@@ -45,7 +46,7 @@ const EditorPage: React.FC = () => {
     return (
         <div className="flex flex-col min-h-screen bg-white text-black sm:mt-10 md:mt-14 mt-12">
 
-            <nav className="bg-background fixed top-0 left-0 right-0 z-50">
+            {/* <nav className="bg-background fixed top-0 left-0 right-0 z-50">
                 <div className="border-b border-gray-400 container flex items-center justify-between h-12 sm:h-14 px-2 sm:px-4 md:px-6 py-6 sm:py-8">
                     <div onClick={() => router.push('/')} className="flex items-center gap-1 sm:gap-2 hover:cursor-pointer hover:text-gray-600">
                         <img
@@ -61,7 +62,10 @@ const EditorPage: React.FC = () => {
                         Sign Up
                     </button>
                 </div>
-            </nav>
+            </nav> */}
+
+            <NavBar/>
+
 
             <div className="flex flex-1 relative">
                 <aside className={`
