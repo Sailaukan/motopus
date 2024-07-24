@@ -5,7 +5,7 @@ const LandingInfo = () => {
     return (
         <div>
             <div className="border-t-2 border-gray-200 my-4"></div>
-            <section className="w-full py-12 md:py-18 lg:py-28">
+            <section className="w-full pb-12 md:pb-18 lg:pb-28 pt-4 md:pt-6 lg:pt-8">
                 <div className="container px-8 md:px-6 lg:px-4 flex flex-col items-center text-center space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <div className="border text-card-foreground rounded-lg shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl" data-v0-t="card">

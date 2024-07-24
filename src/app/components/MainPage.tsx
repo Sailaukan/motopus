@@ -24,7 +24,7 @@ const MainPage: React.FC = () => {
     const code = useCodeStore(state => state.code);
     const setCode = useCodeStore(state => state.setCode);
     const router = useRouter();
-    
+
     const [loading, setLoading] = useState<boolean>(false);
     const { isLoaded, userId, sessionId, getToken } = useAuth();
     const combinedPrompt = `${additionalPrompt}${text}`;
@@ -66,7 +66,7 @@ const MainPage: React.FC = () => {
     return (
         <div className="bg-white text-black min-h-screen">
             <NavBar />
-            <main className="container mx-auto px-4 pt-12 mb-28">
+            <main className="container mx-auto px-4 pt-12 lg:mb-32 md:mb-28 mb-16">
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-center mt-28 lg:mt-32 mb-4">
                     Animate your ideas <br className="hidden sm:inline" />
                     in <NumberTicker value={15} /> seconds

@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
+  ClerkProvider
 } from '@clerk/nextjs'
-import Head from "next/head";
 import { connectToMongoDB } from "@/lib/connectDB";
 
 export const metadata: Metadata = {
@@ -20,19 +15,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  connectToMongoDB(); 
+  connectToMongoDB();
   return (
     <ClerkProvider>
       <html lang="en">
         <body>
-          <header>
-            {/* <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn> */}
-          </header>
           {children}
         </body>
       </html>
