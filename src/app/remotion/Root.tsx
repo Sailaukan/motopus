@@ -206,7 +206,6 @@ export const Main: React.FC<MainProps> = ({ code }) => {
       overflow: 'hidden',
     }}>
       {/* <Video src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"/> */}
-      <Audio src="https://pixabay.com/music/modern-classical-17-3-2024-bon-choix-de-sa-vie-loin-de-son-ame-soeur-196818/"/>
       {videoJSON.commands.map((command, index) => (
         <Sequence key={index} from={command.props.start} durationInFrames={command.props.duration}>
           {renderComponent(frame, command.type, command.props)}
