@@ -15,3 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   )
 }
+
+
+export const API_KEY = process.env.PIXABAYAPIKEY;
+console.log(API_KEY);

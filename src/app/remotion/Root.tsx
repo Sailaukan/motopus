@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sequence, useCurrentFrame, interpolate, Easing, Video, Audio } from 'remotion';
+import { Sequence, useCurrentFrame, interpolate, Easing, Video, Audio, Img } from 'remotion';
 
 interface CommandProps {
   type: string;
@@ -205,12 +205,9 @@ export const Main: React.FC<MainProps> = ({ code }) => {
       height: '720px',
       overflow: 'hidden',
     }}>
-      {/* <Video src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"/> */}
       {videoJSON.commands.map((command, index) => (
         <Sequence key={index} from={command.props.start} durationInFrames={command.props.duration}>
           {renderComponent(frame, command.type, command.props)}
-
-
         </Sequence>
       ))}
     </div>

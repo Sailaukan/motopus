@@ -14,6 +14,7 @@ import LandingInfo from './LandingInfo';
 import Footer from './Footer';
 import { createProject } from '@/lib/action';
 import { useAuth } from "@clerk/nextjs";
+import ImageGallery from './ImageGallery';
 
 interface ClaudeResponse {
     content: Array<{ text: string }>;
@@ -24,12 +25,12 @@ const MainPage: React.FC = () => {
     const code = useCodeStore(state => state.code);
     const setCode = useCodeStore(state => state.setCode);
     const router = useRouter();
-
     const [loading, setLoading] = useState<boolean>(false);
     const { isLoaded, userId, sessionId, getToken } = useAuth();
     const combinedPrompt = `${additionalPrompt}${text}`;
 
     const handleSubmit = async (e: FormEvent<HTMLElement>) => {
+        
         setLoading(true);
         e.preventDefault();
 
