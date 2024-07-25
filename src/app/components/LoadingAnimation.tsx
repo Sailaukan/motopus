@@ -7,7 +7,7 @@ const LoadingAnimation: React.FC = () => {
         'Rendering high-resolution graphics...',
         'Aligning design elements...',
         'Loading scripts...',
-        'Brewing a color palette...',
+        'Generating images...',
         'Applying styles...',
         'Just a few seconds left...',
         'Bringing it all together...',

@@ -21,7 +21,8 @@ Generate JSON commands for a 30-second video (900 frames at 30 fps). The respons
       }
     }
   ],
-  "background": ["#000000", "#111111", "#222222"]
+  "background": ["#000000", "#111111", "#222222"],
+  "backgroundImages": []
 }
 
 The video frame is 1280x720 pixels and should last 30 seconds (900 frames). Use these guidelines:
@@ -46,6 +47,8 @@ Duration of every animation must not be longer than 45 frames.
 Ensure each command has appropriate start times and durations to create a coherent 30-second sequence. Use various animations to create an engaging video. Limit the amount of text in each command to ensure readability within the 1280x720 frame.
 
 The background must be an array of colors for animated backgrounds. The background color will change at the start of each new command, cycling through the array if there are more commands than colors.
+
+The backgroundImages array must be included but left empty. In the future, this array may be used to specify background images for the video.
 
 All requirements above must be strictly followed to generate a video by the user prompt here:
 `;

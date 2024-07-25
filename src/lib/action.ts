@@ -7,6 +7,10 @@ export const createProject = async (userId: string, prompt: string, generatedCod
     await connectToMongoDB();
 
     try {
+        // Parse the generatedCode to extract backgroundImages
+        const parsedCode = JSON.parse(generatedCode);
+        const backgroundImages = parsedCode.backgroundImages || [];
+
         const user = await User.findOneAndUpdate(
             { userId: userId },
             {
@@ -14,6 +18,7 @@ export const createProject = async (userId: string, prompt: string, generatedCod
                     videoCommands: {
                         prompt: prompt,
                         generatedCode: generatedCode,
+                        backgroundImages: backgroundImages
                     }
                 }
             },
@@ -29,7 +34,7 @@ export const createProject = async (userId: string, prompt: string, generatedCod
         return user ? user.toString() : null;
 
     } catch (error) {
-        console.log(error);
-        return { message: 'error creating project' };
+        console.error("Error creating project:", error);
+        return { message: 'Error creating project' };
     }
 };

@@ -14,10 +14,17 @@ import LandingInfo from './LandingInfo';
 import Footer from './Footer';
 import { createProject } from '@/lib/action';
 import { useAuth } from "@clerk/nextjs";
-import ImageGallery from './ImageGallery';
+import NeetsGenerator from './neetsGenerator';
 
 interface ClaudeResponse {
     content: Array<{ text: string }>;
+}
+
+interface Image {
+    id: number;
+    previewURL: string;
+    webformatURL: string;
+    tags: string;
 }
 
 const MainPage: React.FC = () => {
@@ -29,8 +36,24 @@ const MainPage: React.FC = () => {
     const { isLoaded, userId, sessionId, getToken } = useAuth();
     const combinedPrompt = `${additionalPrompt}${text}`;
 
+    const [images, setImages] = useState<Image[]>([]);
+    const [query, setQuery] = useState<string>('yellow flowers');
+
+
+    const generateImages = async (): Promise<string[]> => {
+        const URL = `https://pixabay.com/api/videos/?key=${process.env.NEXT_PUBLIC_PIXABAYAPIKEY}&q=${encodeURIComponent(text)}&per_page=5`;
+    
+        try {
+            const response = await axios.get(URL);
+            return response.data.hits.map((hit: any) => hit.videos.medium.url);
+        } catch (error) {
+            console.error('Error fetching videos:', error);
+            return [];
+        }
+    }
+    
+
     const handleSubmit = async (e: FormEvent<HTMLElement>) => {
-        
         setLoading(true);
         e.preventDefault();
 
@@ -47,9 +70,19 @@ const MainPage: React.FC = () => {
                 max_tokens: 4000,
             });
             const generatedCode = res.data.content.map(item => item.text).join(' ');
-            setCode(generatedCode);
+            let parsedCode = JSON.parse(generatedCode);
 
-            await createProject(userId, text, generatedCode);
+            const generatedImageUrls = await generateImages();
+
+            if (!parsedCode.backgroundImages) {
+                parsedCode.backgroundImages = [];
+            }
+            parsedCode.backgroundImages = [...parsedCode.backgroundImages, ...generatedImageUrls];
+
+            const updatedCode = JSON.stringify(parsedCode);
+            setCode(updatedCode);
+
+            await createProject(userId, text, updatedCode);
 
             router.push('/Editor');
 

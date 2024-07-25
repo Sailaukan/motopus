@@ -18,8 +18,11 @@ Motopus is built using a robust and modern technology stack to ensure high perfo
 - **Remotion Library**: A React library for creating animations and videos programmatically using TypeScript.
 - **Claude 3.5 Sonnet API**: An advanced AI API for generating commands and code in JSON format based on user prompts.
 - **Tailwind CSS**: A utility-first CSS framework for building custom designs without writing custom CSS.
+- **Shad cn**: Tailwind based UI library.
 - **Zustand**: A minimalistic state management library for React that doesn't require providers.
 - **Clerk**: An external API for easy and secure user authentication and management.
+- **Neets AI**: Affordable high-quality AI Text-to-Speech voice generation API.
+- **OpenAI Dall-e 2**: Text-to-image API
 - **MongoDB**: A flexible, document-oriented database for efficiently storing and managing user-generated videos and metadata.
 
 ## How It Works
@@ -30,4 +33,4 @@ Motopus is built using a robust and modern technology stack to ensure high perfo
 4. **Preview**: The animation is rendered and previewed in real-time within the web app.
 5. **Export**: Once satisfied with the preview, the animation can be rendered on AWS Lambda Functions in MP3 format and exported.
 
-*Works only on localhost. Have problems with deploy*
+*Currently collecting users in a waitlist*
