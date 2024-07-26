@@ -22,9 +22,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <Analytics />
         <body>
           {children}
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
