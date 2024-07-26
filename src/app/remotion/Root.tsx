@@ -18,6 +18,7 @@ interface VideoJSON {
   commands: CommandProps[];
   background: string | string[];
   backgroundImages: string[];
+  duration: number;
 }
 
 const getBackgroundImage = (frame: number, images: string[] | undefined, commands: CommandProps[]) => {
@@ -51,7 +52,7 @@ const interpolateColor = (frame: number, startFrame: number, endFrame: number, s
   return `rgb(${r},${g},${b})`;
 };
 
-const renderComponent = (frame: number, type: string, props: { [key: string]: any }) => {
+const renderComponent = (frame: number, type: string, props: { [key: string]: any }, startFrame: number) => {
 
   const easeOutExpo = Easing.bezier(0.16, 1, 0.3, 1);
 
@@ -74,7 +75,7 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
     maxWidth: '1200px',
     opacity: interpolate(
       frame,
-      [props.start, props.start + fadeInDuration, props.start + duration - fadeOutDuration, props.start + duration],
+      [startFrame, startFrame + fadeInDuration, startFrame + duration - fadeOutDuration, startFrame + duration],
       [0, 1, 1, 0],
       { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
     ),
@@ -147,8 +148,8 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
             ...commonStyles,
             fontFamily: 'SF Pro Display, Arial, sans-serif',
             fontWeight: 'bold',
-            color: 'white', // Set text color to white
-            textShadow: '0px 4px 12px black', // Add black shadow to text
+            color: 'white',
+            textShadow: '0px 4px 12px black',
           }}
         >
           {animationStyle.content}
@@ -171,10 +172,6 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
       );
     }
   }
-
-
-
-
   console.warn(`Unknown component type: ${type}`);
   return null;
 };
@@ -220,16 +217,20 @@ export const Main: React.FC<MainProps> = ({ code }) => {
   const getCurrentBackgroundMedia = () => {
     if (!videoJSON.backgroundImages || videoJSON.backgroundImages.length === 0) return null;
 
-    const currentCommandIndex = sortedCommands.findIndex((cmd, index) => {
-      const nextCmd = sortedCommands[index + 1];
-      return frame >= cmd.props.start && (!nextCmd || frame < nextCmd.props.start);
-    });
+    let cumulativeDuration = 0;
+    for (let i = 0; i < sortedCommands.length; i++) {
+      const cmd = sortedCommands[i];
+      if (frame < cumulativeDuration + cmd.props.duration) {
+        return videoJSON.backgroundImages[i % videoJSON.backgroundImages.length];
+      }
+      cumulativeDuration += cmd.props.duration;
+    }
 
-    const mediaIndex = currentCommandIndex === -1 ? 0 : currentCommandIndex % videoJSON.backgroundImages.length;
-    return videoJSON.backgroundImages[mediaIndex];
+    return videoJSON.backgroundImages[0];
   };
 
   const currentBackgroundMedia = getCurrentBackgroundMedia();
+  let cumulativeDuration = 0;
 
   return (
     <div style={{
@@ -269,11 +270,15 @@ export const Main: React.FC<MainProps> = ({ code }) => {
         )
       )}
 
-      {videoJSON.commands.map((command, index) => (
-        <Sequence key={index} from={command.props.start} durationInFrames={command.props.duration}>
-          {renderComponent(frame, command.type, command.props)}
-        </Sequence>
-      ))}
+      {videoJSON.commands.map((command, index) => {
+        const startFrame = cumulativeDuration;
+        cumulativeDuration += command.props.duration;
+        return (
+          <Sequence key={index} from={startFrame} durationInFrames={command.props.duration}>
+            {renderComponent(frame, command.type, command.props, startFrame)}
+          </Sequence>
+        );
+      })}
     </div>
   );
 };

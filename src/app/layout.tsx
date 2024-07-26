@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react"
 import {
   ClerkProvider
 } from '@clerk/nextjs'
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <Analytics />
         <body>
           {children}
         </body>
