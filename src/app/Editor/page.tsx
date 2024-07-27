@@ -15,6 +15,8 @@ import LoadingSpinner from "../components/LoadingTabs";
 import additionalPrompt from "../api/claude/additionalPrompt";
 import { createProject } from "@/lib/action";
 import LoadingAnimation from "../components/LoadingAnimation";
+import { toast } from "sonner";
+import { Toaster } from "../components/ui/sonner";
 
 interface ChatGPTResponse {
     choices: Array<{ message: { content: string } }>;
@@ -295,6 +297,23 @@ const EditorPage: React.FC = () => {
                                         <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z" />
                                     </svg>
                                 </button>
+                                <button
+                                    rel="ugc"
+                                    onClick={() =>
+                                        toast("Not available", {
+                                            description: "You can't download videos on a beta-testing stage",
+                                            action: {
+                                                label: "Close",
+                                                onClick: () => console.log("Close"),
+                                            },
+                                        })
+                                    } className="absolute shadow-lg top-16 right-2 p-3 bg-purple-500 rounded-lg hover:bg-purple-300 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                    </svg>
+                                </button>
+                                <Toaster />
                             </div>
                         </div>
                         {/* <CanvaLikeScroll /> */}

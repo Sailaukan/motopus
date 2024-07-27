@@ -100,7 +100,6 @@ const LandingInfo = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-20">
                         <a
                             className="cursor-pointer shadow-md hover:shadow-xl group relative overflow-hidden rounded-lg transition-all hover:scale-105 focus:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            // href="#"
                             rel="ugc"
                             onClick={() =>
                                 toast("Not available", {
