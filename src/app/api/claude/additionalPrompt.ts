@@ -1,5 +1,5 @@
 const additionalPrompt = `
-Generate JSON commands for a 30-second video (900 frames at 30 fps). The response must consist of only the code, no extra text. The commands should follow this format:
+Generate a detailed JSON structure for a 30-second video (900 frames at 30 fps). The response must consist of only the code, no extra text. The JSON should follow this format:
 
 {
   "commands": [
@@ -25,32 +25,44 @@ Generate JSON commands for a 30-second video (900 frames at 30 fps). The respons
   "backgroundImages": []
 }
 
-The video frame is 1280x720 pixels and should last 30 seconds (900 frames). Use these guidelines:
-- Text size (startSize and finishSize) must be between 40 and 80 pixels for good visibility.
-- You can animate text size by setting different values for startSize and finishSize.
-- The time gap between two components must not be longer than 10 frames. (first start + duration = second start)
-- Position text using pixel values: 
-  - For horizontal center, use 640 for startLeft and finishLeft.
-  - For vertical center, use 360 for startTop and finishTop.
-  - Adjust these values to position text in different areas of the frame.
-- Each frame is 1/30th of a second. Plan your animations accordingly:
-  - start: 0 is the beginning of the video
-  - duration: 30 frames = 1 second, 300 frames = 10 seconds, etc.
-  - Ensure all animations fit within the 900-frame (30-second) timeline
+Video specifications:
+- Frame size: 1280x720 pixels
+- Duration: 30 seconds (900 frames)
+- Framerate: 30 fps
 
-Available animations are:
-- "fastType": Rapidly types out the text
-- "progressiveReveal": Reveals words one by one
+Strict requirements for text commands:
+1. Include at least 7 text commands.
+2. Text size (startSize and finishSize) must be between 40 and 80 pixels.
+3. Animate text size by setting different values for startSize and finishSize.
+4. The time gap between two components must not exceed 10 frames.
+5. Position text using pixel values:
+   - Horizontal center: 640 for startLeft and finishLeft
+   - Vertical center: 360 for startTop and finishTop
+   - Adjust these values to position text in different areas of the frame
+6. Frame timing:
+   - start: 0 is the beginning of the video
+   - duration: 30 frames = 1 second, 300 frames = 10 seconds
+   - Ensure all animations fit within the 900-frame (30-second) timeline
+7. Available animations:
+   - "fastType": Rapidly types out the text
+   - "progressiveReveal": Reveals words one by one
+8. Maximum animation duration: 60 frames
+9. Limit text length to ensure readability within the 1280x720 frame
 
-Duration of every animation must not be longer than 45 frames.
+Background requirements:
+1. The "background" property must be an array of at least 3 color values in hexadecimal format.
+2. Background color changes at the start of each new command, cycling through the array.
+3. Include the "backgroundImages" array, but leave it empty.
 
-Ensure each command has appropriate start times and durations to create a coherent 30-second sequence. Use various animations to create an engaging video. Limit the amount of text in each command to ensure readability within the 1280x720 frame.
+Additional guidelines:
+1. Ensure each command has appropriate start times and durations for a coherent 30-second sequence.
+2. Use various animations to create an engaging video.
+3. Distribute text commands evenly throughout the 30-second duration.
+4. Vary text positions, sizes, and colors for visual interest.
+5. Ensure color contrast between text and background for readability.
+6. Use meaningful and engaging text content related to the video's theme.
 
-The background must be an array of colors for animated backgrounds. The background color will change at the start of each new command, cycling through the array if there are more commands than colors.
-
-The backgroundImages array must be included but left empty. In the future, this array may be used to specify background images for the video.
-
-All requirements above must be strictly followed to generate a video by the user prompt here:
+All requirements above must be strictly followed to generate a video based on the user's prompt. The JSON structure should be valid and free of syntax errors.
 `;
 
-export default additionalPrompt;
+export default additionalPrompt; 

@@ -15,8 +15,8 @@ import Footer from './Footer';
 import { createProject } from '@/lib/action';
 import { useAuth } from "@clerk/nextjs";
 
-interface ClaudeResponse {
-    content: Array<{ text: string }>;
+interface ChatGPTResponse {
+    choices: Array<{ message: { content: string } }>;
 }
 
 interface Image {
@@ -56,12 +56,10 @@ const MainPage: React.FC = () => {
 
     const getKeyWord = async (input: string): Promise<string> => {
         try {
-            const res = await axios.post<ClaudeResponse>('/api/claude', {
+            const res = await axios.post<ChatGPTResponse>('/api/chat', {
                 messages: [{ role: 'user', content: `Extract the main keyword from this text: "${input}". Return only the keyword, nothing else.` }],
-                model: 'claude-3-5-sonnet-20240620',
-                max_tokens: 100,
             });
-            return res.data.content[0].text.trim();
+            return res.data.choices[0].message.content.trim();
         } catch (error) {
             console.error('Error getting keyword:', error);
             return '';
@@ -94,12 +92,13 @@ const MainPage: React.FC = () => {
             const extractedKeyWord = await getKeyWord(text);
             setKeyWord(extractedKeyWord);
 
-            const res = await axios.post<ClaudeResponse>('/api/claude', {
+            const res = await axios.post<ChatGPTResponse>('/api/chat', {
                 messages: [{ role: 'user', content: combinedPrompt }],
-                model: 'claude-3-5-sonnet-20240620',
-                max_tokens: 4000,
             });
-            const generatedCode = res.data.content.map(item => item.text).join(' ');
+            let generatedCode = res.data.choices[0].message.content;
+
+            // Ensure no backticks in the response
+            generatedCode = generatedCode.replace(/```json|```/g, '').trim();
             let parsedCode = JSON.parse(generatedCode);
 
             const generatedImageUrls = await generateImages(extractedKeyWord);
@@ -122,6 +121,7 @@ const MainPage: React.FC = () => {
             setLoading(false);
         }
     };
+
 
     const handleButtonClick = (newText: string) => {
         setText(newText);

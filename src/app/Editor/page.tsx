@@ -29,13 +29,17 @@ const EditorPage: React.FC = () => {
         }
     }, [userId]);
 
+    const [isLoading, setIsLoading] = useState(true);
+
     const fetchVideoCommands = async () => {
+        setIsLoading(true);
         try {
             const response = await axios.get(`/api/videoCommands?userId=${userId}`);
             setVideoCommands(response.data);
-
         } catch (error) {
             console.error('Error fetching video commands:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -156,6 +160,7 @@ const EditorPage: React.FC = () => {
                                 <Player
                                     component={Main}
                                     inputProps={{ code }}
+                                    key={code}
                                     durationInFrames={900}
                                     compositionWidth={1280}
                                     compositionHeight={720}

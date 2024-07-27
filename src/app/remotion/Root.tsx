@@ -53,44 +53,44 @@ const interpolateColor = (frame: number, startFrame: number, endFrame: number, s
 };
 
 const renderComponent = (frame: number, type: string, props: { [key: string]: any }, startFrame: number) => {
-
   const easeOutExpo = Easing.bezier(0.16, 1, 0.3, 1);
-
   const duration = Math.max(props.duration, 120);
   const fadeInDuration = Math.min(30, duration / 5);
   const fadeOutDuration = Math.min(30, duration / 5);
+  const relativeFrame = frame - startFrame;
 
   const commonStyles: React.CSSProperties = {
     position: 'absolute',
-    color: interpolateColor(frame, props.start, props.start + duration, props.startColor, props.finishColor),
-    fontSize: `${interpolate(frame, [props.start, props.start + duration], [
+    color: interpolateColor(frame, startFrame, startFrame + duration, props.startColor, props.finishColor),
+    fontSize: `${interpolate(frame, [startFrame, startFrame + duration], [
       Math.max(40, Math.min(props.startSize || 60, 80)),
       Math.max(40, Math.min(props.finishSize || 60, 80))
     ])}px`,
-    top: `${interpolate(frame, [props.start, props.start + duration], [props.startTop, props.finishTop])}px`,
-    left: `${interpolate(frame, [props.start, props.start + duration], [props.startLeft, props.finishLeft])}px`,
+    top: `${interpolate(frame, [startFrame, startFrame + duration], [props.startTop, props.finishTop])}px`,
+    left: `${interpolate(frame, [startFrame, startFrame + duration], [props.startLeft, props.finishLeft])}px`,
     transform: 'translate(-50%, -50%)',
     textAlign: 'center',
     width: 'auto',
     maxWidth: '1200px',
     opacity: interpolate(
-      frame,
-      [startFrame, startFrame + fadeInDuration, startFrame + duration - fadeOutDuration, startFrame + duration],
+      relativeFrame,
+      [0, fadeInDuration, duration - fadeOutDuration, duration],
       [0, 1, 1, 0],
       { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
     ),
   };
 
   const getTextAnimation = (animationType: string) => {
+    const progress = Math.max(0, Math.min(1, relativeFrame / duration));
 
     switch (animationType) {
       case 'fastType':
         const text = props.text;
-        const elasticEasing = Easing.elastic(1.1);
+        const elasticEasing = Easing.elastic(1);
         const typeProgress = interpolate(
-          frame,
-          [props.start, props.start + props.duration * 1.7],
-          [0, 1],
+          progress,
+          [0, 0.8, 1],
+          [0, 1, 1],
           {
             extrapolateRight: 'clamp',
             easing: elasticEasing,
@@ -107,28 +107,21 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
       case 'progressiveReveal':
         const words = props.text.split(' ');
         const revealProgress = interpolate(
-          frame,
-          [props.start, props.start + props.duration * 2],
-          [0, 1],
+          progress,
+          [0, 0.7, 1], // Complete reveal by 70% of the duration
+          [0, 1, 1],
           {
             extrapolateRight: 'clamp',
             easing: easeOutExpo,
           }
         );
-
         const wordsToShow = Math.ceil(words.length * revealProgress);
-
         return {
           content: words.slice(0, wordsToShow).join(' '),
-          opacity: interpolate(
-            frame,
-            [props.start, props.start + 10],
+          opacity: 1,
+          transform: `translate(-50%, -50%) translateY(${interpolate(
+            revealProgress,
             [0, 1],
-            { extrapolateRight: 'clamp' }
-          ),
-          transform: `translateY(${interpolate(
-            frame,
-            [props.start, props.start + props.duration * 0.7],
             [10, 0],
             { extrapolateRight: 'clamp', easing: easeOutExpo }
           )}px)`,
