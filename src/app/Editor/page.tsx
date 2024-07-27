@@ -17,6 +17,7 @@ const EditorPage: React.FC = () => {
     const setCode = useCodeStore(state => state.setCode);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isNewVideoOpen, setIsNewVideoOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [chosenItem, setChosenItem] = useState<string | null>("1");
 
@@ -55,6 +56,18 @@ const EditorPage: React.FC = () => {
         }
     }, [isEditOpen]);
 
+    useEffect(() => {
+        if (isNewVideoOpen) {
+            setIsNewVideoOpen(true);
+        } else {
+            const timer = setTimeout(() => {
+                setIsVisible(false);
+            }, 700);
+
+            return () => clearTimeout(timer);
+        }
+    }, [isNewVideoOpen]);
+
     return (
         <div className="flex flex-col min-h-screen bg-white text-black sm:mt-10 md:mt-14 mt-12">
             <NavBar />
@@ -82,13 +95,11 @@ const EditorPage: React.FC = () => {
                                 </div>
                             </li>
                         ))}
-
                     </ul>
-
 
                     <div className="border-t-2 border-gray-200 my-4" />
 
-                    <button className="w-full py-2 px-4 text-left text-gray-600 border-gray-300 border rounded-lg hover:bg-gray-200 hover:text-gray-800 transition-colors duration-300">
+                    <button onClick={() => setIsNewVideoOpen(true)} className="w-full py-2 px-4 text-left text-gray-600 border-gray-300 border rounded-lg hover:bg-gray-200 hover:text-gray-800 transition-colors duration-300">
                         +  Create new video
                     </button>
                 </aside>
@@ -126,7 +137,7 @@ const EditorPage: React.FC = () => {
   `}
                 >
                     <div
-                        className="bg-white p-6 rounded-xl shadow-xl w-11/12 max-w-4xl mt-4 sm:mt-16 md:mt-24 max-h-[80vh] overflow-y-auto relative"
+                        className="bg-white p-6 rounded-xl shadow-xl w-11/12 max-w-4xl max-h-[80vh] overflow-y-auto relative"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <JsonEditor
@@ -152,6 +163,25 @@ const EditorPage: React.FC = () => {
                     </div>
                 </div>
 
+                <div
+                    onClick={() => setIsNewVideoOpen(false)}
+                    className={`
+    fixed inset-0 flex flex-col items-center justify-center
+    bg-white bg-opacity-80 backdrop-blur-sm z-50
+    transition-all duration-300 ease-in-out
+    ${isNewVideoOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}
+  `}
+                >
+                    <div
+                        className="bg-white p-4 rounded-2xl shadow-xl w-11/12 max-w-3xl max-h-[80vh] overflow-y-auto relative"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <Input
+                            placeholder="Enter your new video description"
+                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500"
+                        />
+                    </div>
+                </div>
 
                 < main className={`flex-1 p-4 transition-all duration-300 ease-in-out overflow-hidden ${isSidebarOpen ? 'md:ml-64' : 'ml-0'}`}>
                     <div className="max-w-full overflow-hidden">
@@ -160,7 +190,6 @@ const EditorPage: React.FC = () => {
                                 <Player
                                     component={Main}
                                     inputProps={{ code }}
-                                    key={code}
                                     durationInFrames={900}
                                     compositionWidth={1280}
                                     compositionHeight={720}

@@ -31,23 +31,24 @@ Video specifications:
 - Framerate: 30 fps
 
 Strict requirements for text commands:
-1. Include at least 7 text commands.
+1. Include at least 10 text commands.
 2. Text size (startSize and finishSize) must be between 40 and 80 pixels.
 3. Animate text size by setting different values for startSize and finishSize.
 4. The time gap between two components must not exceed 10 frames.
-5. Position text using pixel values:
+5. Each text command must have a duration of at least 60 frames (2 seconds).
+6. Position text using pixel values:
    - Horizontal center: 640 for startLeft and finishLeft
    - Vertical center: 360 for startTop and finishTop
    - Adjust these values to position text in different areas of the frame
-6. Frame timing:
+7. Frame timing:
    - start: 0 is the beginning of the video
    - duration: 30 frames = 1 second, 300 frames = 10 seconds
    - Ensure all animations fit within the 900-frame (30-second) timeline
-7. Available animations:
+8. Available animations:
    - "fastType": Rapidly types out the text
    - "progressiveReveal": Reveals words one by one
-8. Maximum animation duration: 60 frames
-9. Limit text length to ensure readability within the 1280x720 frame
+9. Maximum animation duration: 120 frames
+10. Limit text length to ensure readability within the 1280x720 frame
 
 Background requirements:
 1. The "background" property must be an array of at least 3 color values in hexadecimal format.
@@ -65,4 +66,4 @@ Additional guidelines:
 All requirements above must be strictly followed to generate a video based on the user's prompt. The JSON structure should be valid and free of syntax errors.
 `;
 
-export default additionalPrompt; 
+export default additionalPrompt;

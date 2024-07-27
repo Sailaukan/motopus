@@ -97,7 +97,6 @@ const MainPage: React.FC = () => {
             });
             let generatedCode = res.data.choices[0].message.content;
 
-            // Ensure no backticks in the response
             generatedCode = generatedCode.replace(/```json|```/g, '').trim();
             let parsedCode = JSON.parse(generatedCode);
 
@@ -121,7 +120,6 @@ const MainPage: React.FC = () => {
             setLoading(false);
         }
     };
-
 
     const handleButtonClick = (newText: string) => {
         setText(newText);

@@ -7,7 +7,6 @@ export const createProject = async (userId: string, prompt: string, generatedCod
     await connectToMongoDB();
 
     try {
-        // Parse the generatedCode to extract backgroundImages
         const parsedCode = JSON.parse(generatedCode);
         const backgroundImages = parsedCode.backgroundImages || [];
 

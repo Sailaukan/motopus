@@ -41,7 +41,6 @@ const JsonEditor: React.FC<JsonEditorProps> = ({ code, onUpdate }) => {
         {jsonData.commands.map((command: any, index: number) => (
           command.type === 'text' && (
             <div key={index} className="flex flex-col space-y-2">
-              <label className="font-medium text-sm text-gray-600">Text {index + 1}</label>
               <Input
                 value={command.props.text}
                 onChange={(e) => handleTextChange(index, e.target.value)}
