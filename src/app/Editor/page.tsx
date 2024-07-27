@@ -10,18 +10,30 @@ import axios from 'axios';
 import { useAuth } from "@clerk/nextjs";
 import JsonEditor from "../components/JsonEditor";
 import { CanvaLikeScroll } from "../components/CanvaLikeScroll";
+import { Button } from "../components/ui/button";
+import LoadingSpinner from "../components/LoadingTabs";
+import additionalPrompt from "../api/claude/additionalPrompt";
+import { createProject } from "@/lib/action";
+import LoadingAnimation from "../components/LoadingAnimation";
+
+interface ChatGPTResponse {
+    choices: Array<{ message: { content: string } }>;
+}
 
 const EditorPage: React.FC = () => {
 
     const code = useCodeStore(state => state.code);
+    const [text, setText] = useState<string>('');
     const setCode = useCodeStore(state => state.setCode);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isNewVideoOpen, setIsNewVideoOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [chosenItem, setChosenItem] = useState<string | null>("1");
-
+    const [isLoading, setIsLoading] = useState(true);
+    const [isNewLoading, setNewLoading] = useState(false);
     const [videoCommands, setVideoCommands] = useState<any[]>([]);
+    const combinedPrompt = `${additionalPrompt}${text}`;
     const { userId } = useAuth();
 
     useEffect(() => {
@@ -30,7 +42,73 @@ const EditorPage: React.FC = () => {
         }
     }, [userId]);
 
-    const [isLoading, setIsLoading] = useState(true);
+
+
+    const getKeyWord = async (input: string): Promise<string> => {
+        try {
+            const res = await axios.post<ChatGPTResponse>('/api/chat', {
+                messages: [{ role: 'user', content: `Extract the main keyword from this text: "${input}". Return only the keyword, nothing else.` }],
+            });
+            return res.data.choices[0].message.content.trim();
+        } catch (error) {
+            console.error('Error getting keyword:', error);
+            return '';
+        }
+    };
+
+    const generateImages = async (keyword: string): Promise<string[]> => {
+        const URL = `https://pixabay.com/api/videos/?key=${process.env.NEXT_PUBLIC_PIXABAYAPIKEY}&q=${encodeURIComponent(keyword)}&per_page=10`;
+
+        try {
+            const response = await axios.get(URL);
+            return response.data.hits.map((hit: any) => hit.videos.medium.url);
+        } catch (error) {
+            console.error('Error fetching videos:', error);
+            return [];
+        }
+    }
+
+    const handleCreateButton = async () => {
+        setNewLoading(true);
+        setIsNewVideoOpen(false)
+        setText("")
+
+        if (!userId) {
+            console.error("User not authenticated");
+            setNewLoading(false);
+            return;
+        }
+
+        try {
+            const extractedKeyWord = await getKeyWord(text);
+
+            const res = await axios.post<ChatGPTResponse>('/api/chat', {
+                messages: [{ role: 'user', content: combinedPrompt }],
+            });
+            let generatedCode = res.data.choices[0].message.content;
+
+            generatedCode = generatedCode.replace(/```json|```/g, '').trim();
+            let parsedCode = JSON.parse(generatedCode);
+
+            const generatedImageUrls = await generateImages(extractedKeyWord);
+
+            if (!parsedCode.backgroundImages) {
+                parsedCode.backgroundImages = [];
+            }
+            parsedCode.backgroundImages = [...parsedCode.backgroundImages, ...generatedImageUrls];
+
+            const updatedCode = JSON.stringify(parsedCode);
+            setCode(updatedCode);
+
+            await createProject(userId, text, updatedCode);
+
+            fetchVideoCommands();
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            setNewLoading(false);
+        }
+    }
 
     const fetchVideoCommands = async () => {
         setIsLoading(true);
@@ -95,6 +173,9 @@ const EditorPage: React.FC = () => {
                                 </div>
                             </li>
                         ))}
+                        {isLoading &&
+                            <LoadingSpinner />
+                        }
                     </ul>
 
                     <div className="border-t-2 border-gray-200 my-4" />
@@ -133,11 +214,10 @@ const EditorPage: React.FC = () => {
     fixed inset-0 flex flex-col items-center justify-center
     bg-white bg-opacity-80 backdrop-blur-sm z-50
     transition-all duration-300 ease-in-out
-    ${isEditOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}
-  `}
+    ${isEditOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
                 >
                     <div
-                        className="bg-white p-6 rounded-xl shadow-xl w-11/12 max-w-4xl max-h-[80vh] overflow-y-auto relative"
+                        className="bg-white p-8 rounded-xl shadow-xl w-11/12 max-w-4xl max-h-[80vh] overflow-y-auto relative"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <JsonEditor
@@ -173,13 +253,19 @@ const EditorPage: React.FC = () => {
   `}
                 >
                     <div
-                        className="bg-white p-4 rounded-2xl shadow-xl w-11/12 max-w-3xl max-h-[80vh] overflow-y-auto relative"
+                        className="bg-white p-3 rounded-2xl shadow-xl w-11/12 max-w-3xl max-h-[80vh] overflow-y-auto relative flex items-center space-x-2"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <Input
                             placeholder="Enter your new video description"
-                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500"
+                            onChange={(e) => setText(e.target.value)}
+                            className="w-full p-2 border border-gray-300 text-md rounded-md focus:ring-2 focus:ring-purple-500"
                         />
+                        <Button onClick={() => handleCreateButton()} type="submit" className="py-4 px-2 bg-purple-600 hover:bg-purple-400 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8" />
+                            </svg>
+                        </Button>
                     </div>
                 </div>
 
@@ -212,6 +298,7 @@ const EditorPage: React.FC = () => {
                             </div>
                         </div>
                         {/* <CanvaLikeScroll /> */}
+                        {isNewLoading && <LoadingAnimation />}
                     </div>
                 </main >
             </div>

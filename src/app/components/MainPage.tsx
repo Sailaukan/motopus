@@ -84,6 +84,7 @@ const MainPage: React.FC = () => {
 
         if (!userId) {
             console.error("User not authenticated");
+            router.push('/sign-in')
             setLoading(false);
             return;
         }

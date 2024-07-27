@@ -44,7 +44,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({ code, onUpdate }) => {
               <Input
                 value={command.props.text}
                 onChange={(e) => handleTextChange(index, e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-4 text-md border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500"
               />
             </div>
           )
