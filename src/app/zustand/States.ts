@@ -12,7 +12,7 @@ const useCodeStore = create<CodeState>((set) => ({
       {
         "type": "text",
         "props": {
-          "text": "Welcome to our show",
+          "text": "This is a default video",
           "animation": "fastType",
           "start": 0,
           "duration": 60,
@@ -29,7 +29,7 @@ const useCodeStore = create<CodeState>((set) => ({
       {
         "type": "text",
         "props": {
-          "text": "Enjoy the experience",
+          "text": "To generate a video click on Create New Video",
           "animation": "progressiveReveal",
           "start": 60,
           "duration": 120,

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Sequence, useCurrentFrame, interpolate, Easing, Video, Audio, Img } from 'remotion';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Sequence, useCurrentFrame, useVideoConfig, interpolate, Easing, Video, Img } from 'remotion';
 
 interface CommandProps {
   type: string;
@@ -21,16 +21,31 @@ interface VideoJSON {
   duration: number;
 }
 
-const getBackgroundImage = (frame: number, images: string[] | undefined, commands: CommandProps[]) => {
-  if (!images || images.length === 0) return null;
+const usePreloadVideos = (videos: string[], dependencies: any[]) => {
+  const [loadedVideos, setLoadedVideos] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const currentCommandIndex = commands.findIndex((cmd, index) => {
-    const nextCmd = commands[index + 1];
-    return frame >= cmd.props.start && (!nextCmd || frame < nextCmd.props.start);
-  });
+  useEffect(() => {
+    setIsLoading(true);
+    setLoadedVideos([]);
 
-  const imageIndex = currentCommandIndex === -1 ? 0 : currentCommandIndex % images.length;
-  return images[imageIndex];
+    const preloadVideo = (src: string) => {
+      return new Promise<void>((resolve) => {
+        const video = document.createElement('video');
+        video.src = src;
+        video.onloadeddata = () => {
+          setLoadedVideos((prev) => [...prev, src]);
+          resolve();
+        };
+      });
+    };
+
+    Promise.all(videos.map(preloadVideo)).then(() => {
+      setIsLoading(false);
+    });
+  }, [...dependencies, videos]);
+
+  return { isLoading, videosLoaded: loadedVideos.length === videos.length };
 };
 
 const interpolateColor = (frame: number, startFrame: number, endFrame: number, startColor: string | undefined, endColor: string | undefined) => {
@@ -108,7 +123,7 @@ const renderComponent = (frame: number, type: string, props: { [key: string]: an
         const words = props.text.split(' ');
         const revealProgress = interpolate(
           progress,
-          [0, 0.7, 1], // Complete reveal by 70% of the duration
+          [0, 0.7, 1],
           [0, 1, 1],
           {
             extrapolateRight: 'clamp',
@@ -173,22 +188,28 @@ const isVideo = (url: string) => {
   return url.match(/\.(mp4|webm|ogg)$/i) !== null;
 };
 
-export const Main: React.FC<MainProps> = ({ code }) => {
+
+const VideoRenderer: React.FC<{ code: string }> = ({ code }) => {
   const [videoJSON, setVideoJSON] = useState<VideoJSON | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
 
   useEffect(() => {
+    setIsLoading(true);
     try {
       const parsedJSON = JSON.parse(code);
       setVideoJSON(parsedJSON);
+      setIsLoading(false);
     } catch (error) {
       console.error("Invalid JSON in code context:", error);
       setVideoJSON(null);
+      setIsLoading(false);
     }
   }, [code]);
 
-  if (!videoJSON) {
-    return <div>Loading or invalid JSON...</div>;
+  if (isLoading || !videoJSON) {
+    return <div>Loading...</div>;
   }
 
   const sortedCommands = [...videoJSON.commands].sort((a, b) => a.props.start - b.props.start);
@@ -224,7 +245,6 @@ export const Main: React.FC<MainProps> = ({ code }) => {
 
   const currentBackgroundMedia = getCurrentBackgroundMedia();
   let cumulativeDuration = 0;
-
   return (
     <div style={{
       flexGrow: 1,
@@ -238,6 +258,7 @@ export const Main: React.FC<MainProps> = ({ code }) => {
       {currentBackgroundMedia && (
         isVideo(currentBackgroundMedia) ? (
           <Video
+            key={currentBackgroundMedia}
             src={currentBackgroundMedia}
             style={{
               position: 'absolute',
@@ -247,9 +268,12 @@ export const Main: React.FC<MainProps> = ({ code }) => {
               height: '100%',
               objectFit: 'cover',
             }}
+            startFrom={0}
+            endAt={durationInFrames}
           />
         ) : (
           <Img
+            key={currentBackgroundMedia}
             src={currentBackgroundMedia}
             style={{
               position: 'absolute',
@@ -274,4 +298,14 @@ export const Main: React.FC<MainProps> = ({ code }) => {
       })}
     </div>
   );
+};
+
+export const Main: React.FC<MainProps> = ({ code }) => {
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    setKey(prevKey => prevKey + 1);
+  }, [code]);
+
+  return <VideoRenderer key={key} code={code} />;
 };
