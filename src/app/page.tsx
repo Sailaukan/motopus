@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <RootLayout>
       <Head>
-        <link rel="icon" href="/motoicon.ico" />
+        <link rel="icon" href="/icon.ico" />
       </Head>
       <MainPage />
       {/* <BetaPreview/> */}
