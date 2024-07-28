@@ -49,7 +49,7 @@ const EditorPage: React.FC = () => {
     const getKeyWord = async (input: string): Promise<string> => {
         try {
             const res = await axios.post<ChatGPTResponse>('/api/chat', {
-                messages: [{ role: 'user', content: `Extract 1-2 most specific and relevant keywords from this text, ignoring generic terms like 'video', 'about', 'presentation', etc.: "${input}". Return only the keyword(s) separated by a comma if there are two, nothing else.` }],
+                messages: [{ role: 'user', content: `Extract 1 most specific and relevant keyword from this text, ignoring generic terms like 'video', 'about', 'presentation', etc.: "${input}". Return only the keyword.` }],
             });
             return res.data.choices[0].message.content.trim();
         } catch (error) {

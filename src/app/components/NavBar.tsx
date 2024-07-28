@@ -19,8 +19,8 @@ const NavBar = () => {
                     <span className="text-xl sm:text-2xl font-bold">motopus</span>
                 </div>
                 {!isSignedIn ?
-                    <button onClick={() => router.push('/sign-in')} className="bg-purple-600 text-white px-3 py-3 lg:px-5 lg:py-3 rounded-md text-xs sm:text-sm hover:bg-purple-700 transition-colors shadow-lg">
-                        Sign In
+                    <button onClick={() => router.push('/sign-up')} className="bg-purple-600 text-white px-3 py-3 lg:px-5 lg:py-3 rounded-md text-xs sm:text-sm hover:bg-purple-700 transition-colors shadow-lg">
+                        Sign Up
                     </button>
                     :
                     <div>
