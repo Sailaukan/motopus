@@ -44,31 +44,29 @@ const EditorPage: React.FC = () => {
         }
     }, [userId]);
 
-
-
     const getKeyWord = async (input: string): Promise<string> => {
         try {
             const res = await axios.post<ChatGPTResponse>('/api/chat', {
                 messages: [{
-                    role: 'user', content: `Analyze the following text and extract exactly two keywords that best represent its core subject matter:
+                    role: 'user', content: `Analyze the following text and extract the single most important keyword that best represents its core subject matter:
     
-    1. The keywords must be specific and highly relevant to the main topic.
-    2. Avoid generic terms, common verbs, or broad categories (e.g., 'video', 'about', 'presentation', 'thing', 'person').
-    3. Prioritize nouns, proper nouns, or technical terms that are central to the subject.
-    4. If the text is about a particular field, choose keywords specific to that domain.
-    5. If one keyword is clearly more important, use it as the first word.
-    6. The two words should work together to convey the essence of the topic.
-    7. Do not use phrases; each keyword should be a single word.
-    8. If the text is too vague or broad, choose the most concrete terms available.
+    1. The keyword must be specific and highly relevant to the main topic.
+    2. It should be a single word, not a phrase.
+    3. Avoid generic terms, common verbs, or broad categories (e.g., 'video', 'about', 'presentation', 'thing', 'person').
+    4. Prioritize nouns, proper nouns, or technical terms that are central to the subject.
+    5. If the text is about a particular field, choose a keyword specific to that domain.
+    6. If the text is too vague or broad, choose the most concrete and specific term available.
+    7. Ignore any words that don't contribute to the core meaning (e.g., articles, prepositions, conjunctions).
+    8. If multiple words seem equally important, choose the most unusual or specific one.
     
-    Return only the two keywords, separated by a single space, with no additional text or explanation.
+    Return only the single keyword, with no additional text or explanation.
     
     Input text: "${input}"`
                 }],
             });
             return res.data.choices[0].message.content.trim();
         } catch (error) {
-            console.error('Error getting keywords:', error);
+            console.error('Error getting keyword:', error);
             return '';
         }
     };
