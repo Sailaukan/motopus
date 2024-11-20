@@ -10,7 +10,7 @@ export async function POST(req: Request) {
         const { messages } = await req.json();
 
         const chatCompletion = await openai.chat.completions.create({
-            model: "o1-mini-2024-09-12",
+            model: "o1-preview",
             messages: messages,
             max_tokens: 10000,
         });
