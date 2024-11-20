@@ -25,7 +25,7 @@ export async function POST(req: Request) {
             ]
         });
     } catch (error: any) {
-        console.error('OpenAI API error details:', error.response?.data || error.message);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error('OpenAI API error details:');
+        return NextResponse.json({ error: error.response?.data || error.message }, { status: 500 });
     }
 }
