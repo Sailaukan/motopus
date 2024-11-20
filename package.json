@@ -37,7 +37,7 @@
     "mongoose": "^8.5.1",
     "next": "14.2.4",
     "next-themes": "^0.3.0",
-    "openai": "^4.53.0",
+    "openai": "^4.72.0",
     "react": "^18",
     "react-dom": "^18",
     "react-spring": "^9.7.3",
