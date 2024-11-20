@@ -12,7 +12,7 @@ export async function POST(req: Request) {
         const chatCompletion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: messages,
-            max_tokens: 1000,
+            max_tokens: 10000,
         });
 
         return NextResponse.json({
@@ -24,8 +24,8 @@ export async function POST(req: Request) {
                 }
             ]
         });
-    } catch (error) {
-        console.error('OpenAI API error:', error);
+    } catch (error: any) {
+        console.error('OpenAI API error details:', error.response?.data || error.message);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
