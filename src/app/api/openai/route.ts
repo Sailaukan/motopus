@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY; // Use a server-side environment variable
+const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY; 
 
 export async function POST(req: NextRequest) {
     try {
-        const { text } = await req.json(); // Changed from 'prompt' to 'text' to match client-side
+        const { text } = await req.json();
 
         if (!text) {
             return NextResponse.json({ error: 'No text provided' }, { status: 400 });
