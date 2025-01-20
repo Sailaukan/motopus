@@ -75,9 +75,8 @@ const EditorPage: React.FC = () => {
 
 
   const generateImages = async (keyword: string): Promise<string[]> => {
-    const URL = `https://pixabay.com/api/?key=${
-      process.env.NEXT_PUBLIC_PIXABAYAPIKEY
-    }&q=${encodeURIComponent(keyword)}&per_page=10`;
+    const URL = `https://pixabay.com/api/?key=${process.env.NEXT_PUBLIC_PIXABAYAPIKEY
+      }&q=${encodeURIComponent(keyword)}&per_page=10`;
 
     try {
       const response = await axios.get(URL);
@@ -205,18 +204,16 @@ const EditorPage: React.FC = () => {
                         setChosenItem(command._id);
                         setCode(command.generatedCode);
                       }}
-                      className={`py-3 px-4 rounded-md overflow-hidden whitespace-nowrap border-2 cursor-pointer transition-colors duration-300 ${
-                        chosenItem === command._id
-                          ? "bg-purple-200 border-purple-300 border-2 text-purple-950 hover:bg-purple-300"
-                          : "bg-white border-gray-100 text-gray-800 hover:bg-purple-100 hover:border-purple-100 hover:text-purple-950"
-                      }`}
+                      className={`py-3 px-4 rounded-md overflow-hidden whitespace-nowrap border-2 cursor-pointer transition-colors duration-300 ${chosenItem === command._id
+                        ? "bg-purple-200 border-purple-300 border-2 text-purple-950 hover:bg-purple-300"
+                        : "bg-white border-gray-100 text-gray-800 hover:bg-purple-100 hover:border-purple-100 hover:text-purple-950"
+                        }`}
                     >
                       <div
-                        className={`inline-block ${
-                          command.prompt.length > 23
-                            ? "hover:animate-marquee"
-                            : ""
-                        }`}
+                        className={`inline-block ${command.prompt.length > 23
+                          ? "hover:animate-marquee"
+                          : ""
+                          }`}
                       >
                         {command.prompt}
                       </div>
@@ -258,9 +255,8 @@ const EditorPage: React.FC = () => {
             fill="none"
             viewBox="0 0 24 24"
             stroke="black"
-            className={`w-5 h-5 transition-transform duration-300 ${
-              isSidebarOpen ? "" : "rotate-180"
-            }`}
+            className={`w-5 h-5 transition-transform duration-300 ${isSidebarOpen ? "" : "rotate-180"
+              }`}
           >
             <path
               strokeLinecap="round"
@@ -277,11 +273,10 @@ const EditorPage: React.FC = () => {
     fixed inset-0 flex flex-col items-center justify-center
     bg-white bg-opacity-80 backdrop-blur-sm z-50
     transition-all duration-300 ease-in-out
-    ${
-      isNewVideoOpen
-        ? "opacity-100 scale-100"
-        : "opacity-0 scale-95 pointer-events-none"
-    }
+    ${isNewVideoOpen
+              ? "opacity-100 scale-100"
+              : "opacity-0 scale-95 pointer-events-none"
+            }
   `}
         >
           <div
@@ -315,9 +310,8 @@ const EditorPage: React.FC = () => {
         </div>
 
         <main
-          className={`flex-1 p-4 transition-all duration-300 ease-in-out overflow-hidden ${
-            isSidebarOpen ? "md:ml-64" : "ml-0"
-          }`}
+          className={`flex-1 p-4 transition-all duration-300 ease-in-out overflow-hidden ${isSidebarOpen ? "md:ml-64" : "ml-0"
+            }`}
         >
           <div className="max-w-full overflow-hidden">
             <div className="relative rounded-lg lg:p-2 py-20 px-2 md:py-0 md:px-0 my-0 bg-purple-100 lg:my-5">

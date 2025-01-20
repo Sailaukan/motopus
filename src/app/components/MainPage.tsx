@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useCodeStore from "../zustand/States";
 import axios from "axios";
@@ -14,6 +14,8 @@ import LandingInfo from "./LandingInfo";
 import Footer from "./Footer";
 import { createProject } from "@/lib/action";
 import { useAuth } from "@clerk/nextjs";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 interface ChatGPTResponse {
   choices: Array<{ message: { content: string } }>;
@@ -35,6 +37,45 @@ const MainPage: React.FC = () => {
   const { isLoaded, userId, sessionId, getToken } = useAuth();
   const combinedPrompt = `${additionalPrompt}${text}`;
   const [keyWord, setKeyWord] = useState<string>("");
+
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const [showSparkles, setShowSparkles] = useState(false);
+
+  useEffect(() => {
+    // Trigger sparkle animation every 5 seconds
+    const interval = setInterval(() => {
+      setShowSparkles(true);
+      setTimeout(() => setShowSparkles(false), 1000);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const buttonVariants = {
+    hover: {
+      scale: 1.05,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }
+    },
+    tap: {
+      scale: 0.95
+    }
+  };
 
   const buttonsData = [
     {
@@ -88,9 +129,8 @@ const MainPage: React.FC = () => {
   };
 
   const generateImages = async (keyword: string): Promise<string[]> => {
-    const URL = `https://pixabay.com/api/videos/?key=${
-      process.env.NEXT_PUBLIC_PIXABAYAPIKEY
-    }&q=${encodeURIComponent(keyword)}&per_page=10`;
+    const URL = `https://pixabay.com/api/videos/?key=${process.env.NEXT_PUBLIC_PIXABAYAPIKEY
+      }&q=${encodeURIComponent(keyword)}&per_page=10`;
 
     try {
       const response = await axios.get(URL);
@@ -149,61 +189,121 @@ const MainPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-white text-black min-h-screen">
+    <div className="bg-gradient-to-b from-white via-purple-50 to-white text-black min-h-screen">
       <NavBar />
-      <main className="container mx-auto px-4 pt-12 lg:mb-32 md:mb-28 mb-16">
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-center mt-28 lg:mt-32 mb-4">
+      <motion.main
+        className="container mx-auto px-4 pt-12 lg:mb-32 md:mb-28 mb-16"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <motion.div
+          className="relative"
+          animate={{ opacity: showSparkles ? 1 : 0 }}
+        >
+          <Sparkles
+            className="absolute -top-10 right-1/4 text-purple-500"
+            size={24}
+          />
+        </motion.div>
+
+        <motion.h1
+          className="text-5xl md:text-6xl lg:text-7xl font-bold text-center mt-28 lg:mt-32 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500"
+          variants={containerVariants}
+        >
           Animate your ideas <br className="hidden sm:inline" />
           in <NumberTicker value={15} /> seconds
-        </h1>
-        <p className="text-sm md:text-base lg:text-lg text-center text-gray-400 mb-8">
+        </motion.h1>
+
+        <motion.p
+          className="text-sm md:text-base lg:text-lg text-center text-gray-600 mb-8"
+          variants={containerVariants}
+        >
           Describe the video you want and get
           <br className="sm:hidden" /> AI generated animation
-        </p>
+        </motion.p>
 
-        <form
+        <motion.form
           onSubmit={handleSubmit}
           className="max-w-2xl mx-auto flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2"
+          variants={containerVariants}
         >
-          <Input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Colorful preview for Instagram story"
-            className="placeholder-gray-200 py-6 px-5 w-full"
-          />
-          <Button
-            type="submit"
-            className="py-6 px-8 bg-purple-600 hover:bg-purple-400 w-full sm:w-auto font-bold text-md"
+          <div className="relative w-full">
+            <motion.div
+              className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-blue-500 rounded-lg blur opacity-75"
+              animate={{
+                opacity: isInputFocused ? 0.75 : 0
+              }}
+              transition={{ duration: 0.3 }}
+            />
+            <Input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+              placeholder="Colorful preview for Instagram story"
+              className="relative placeholder-gray-400 py-6 px-5 w-full bg-white/90 backdrop-blur-sm border-2 border-purple-100 focus:border-purple-500 transition-all duration-300"
+            />
+          </div>
+
+          <motion.div
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
           >
-            Generate
-          </Button>
-        </form>
-
-        <div className="max-w-2xl mx-auto mt-4 mb-0 md:mb-6 lg:mb-10 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-          {buttonsData.map((button, index) => (
             <Button
-              key={index}
-              onClick={() => handleButtonClick(button.onClickMessage)}
-              className="p-3 w-full border border-gray-300 bg-gray-100 hover:border-purple-600 text-gray-800 hover:bg-purple-600 hover:text-white transition-colors duration-300 flex items-center justify-center"
+              type="submit"
+              className="py-6 px-8 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-500 hover:to-blue-400 w-full sm:w-auto font-bold text-md shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mr-1"
-                width="16"
-                height="16"
-                fill="currentColor"
-                viewBox="0 0 16 16"
-              >
-                <path d={button.iconPath} />
-              </svg>
-              {button.label}
+              Generate
             </Button>
-          ))}
-        </div>
+          </motion.div>
+        </motion.form>
 
-        {loading && <LoadingAnimation />}
-      </main>
+        <motion.div
+          className="max-w-2xl items-center mx-auto mt-4 mb-0 md:mb-6 lg:mb-10 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2"
+          variants={containerVariants}
+        >
+          {buttonsData.map((button, index) => (
+            <motion.div
+              key={index}
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="tap"
+            >
+              <Button
+                onClick={() => handleButtonClick(button.onClickMessage)}
+                className="p-3 w-full border-2 border-purple-100 bg-white/90 backdrop-blur-sm hover:border-purple-500 text-gray-800 hover:bg-purple-600 hover:text-white transition-all duration-300 flex items-center justify-center group"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mr-1 group-hover:scale-110 transition-transform duration-300"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path d={button.iconPath} />
+                </svg>
+                {button.label}
+              </Button>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <AnimatePresence>
+          {loading && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <LoadingAnimation />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.main>
       <LandingInfo />
       <Footer />
     </div>
