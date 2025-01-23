@@ -208,7 +208,7 @@ const MainPage: React.FC = () => {
         </motion.div>
 
         <motion.h1
-          className="text-5xl md:text-6xl lg:text-7xl font-bold text-center mt-28 lg:mt-32 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500"
+          className="text-5xl md:text-6xl lg:text-7xl font-bold text-center mt-28 lg:mt-32 mb-4"
           variants={containerVariants}
         >
           Animate your ideas <br className="hidden sm:inline" />
